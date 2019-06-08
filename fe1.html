@@ -5,51 +5,11 @@
 <head>
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Φύλλο εργασίας 1</title>
-
+  <link rel="stylesheet" type="text/css" href="simulations.css">
   <link rel="stylesheet" href="fonts/BPtypewrite.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
   <style>
-    #deskDIV {
-      overflow: hidden;
-      transition: width 1s;
-      -webkit-transition: width 1s;
-    }
 
-    .half {
-      width: 50%;
-      float: left;
-    }
-
-    @media only screen and (max-width:500px) {
-
-      /* For mobile phones: */
-      .half {
-        width: 100%;
-      }
-    }
-
-    .myCanvas-button {
-      padding: .4em 1em;
-      display: inline-block;
-      position: relative;
-      line-height: normal;
-      margin-right: .1em;
-      cursor: pointer;
-      vertical-align: middle;
-      text-align: center;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      overflow: visible;
-    }
-
-    .container {
-      position: relative;
-      text-align: center;
-      clear: left;
-
-    }
 
     .measurement {
       position: absolute;
@@ -74,27 +34,15 @@
       transform: translate(-50%, -50%);
       color: #008982
     }
-
-    body {
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
-      color: #333;
-      font-family: BPTypewrite, sans-serif, 'Arial Narrow';
-      margin-top: auto;
-      background: transparent;
-      font-size: 15px;
-    }
   </style>
 </head>
 
 <body>
-  <div style="background:white; border:#ccc 2px solid; border-radius:5px; text-align:center;padding: 5px 0 5px 0;min-height:500px">
-    <div class="half" style=" float: left; text-align:center;"><span style="font-weight:bold">
-        Φύλλο εργασίας 1
-        <hr style="height:2px;border-width:0;background-color:#ccc"></span></div>
-
-    <div class="half" style=" float: left; text-align:center;">
+      <div class="half">
+        <span style="font-weight:bold">Φύλλο εργασίας 1</span>
+        <hr style="height:2px;border-width:0;background-color:#ccc">
+      </div>
+    <div class="half">
       <span>© Περί ΦυσιQuiz</span>
       <hr style="height:2px;border-width:0;background-color:#ccc;">
     </div>
@@ -106,9 +54,9 @@
         <i class="fa fa-times myCanvas-button" style="color:#333" onclick="clearMeasurement();" title="Ακύρωση μέτρησης"></i>
         <i class="fas fa-undo myCanvas-button" style="color:#333" onclick="reset();" title="Επαναφορά"></i>
         <i class="fa fa-calculator myCanvas-button" style="color:#333" onclick="calculate();" title="Υπολόγισε τη μέση τιμή"></i>
-        <i id="hide-button" class="fa fa-eye-slash myCanvas-button" style="color:#333" onclick="hideDIV();" title="Κρύψε το θρανίο"></i>
+        <i id="hide-button" class="fa fa-eye-slash myCanvas-button" style="color:#333" onclick="hideDIV('experimentDIV');" title="Κρύψε το θρανίο"></i>
       </p>
-      <div class="container">
+      <div class="imageContainer">
         <img src="fe1.png" alt=" Φύλλο εργασίας 1" style="width:100%;">
         <p class="measurement" id="1" style="top:15%"></p>
         <p class="measurement" id="2" style="top:22.2%"></p>
@@ -124,70 +72,26 @@
         <p id="average"></p>
       </div>
     </div>
-    <div id="deskDIV" class="half">
-      <canvas id="desk" style="width:100%" width="698" height="701"></canvas>
+    <div id="experimentDIV" class="half">
+      <canvas id="experiment" style="width:100%" width="698" height="701"></canvas>
     </div>&nbsp;
-  </div>
   <p id="demo"></p>
+  <script type="text/javascript" src="simulations.js"></script>
   <script>
-    var d = document.getElementById('desk')
-    var dctx = d.getContext("2d");
-    var pointerX, pointerY, scale = 1;
-    var cornerRadius = 5;
-    var distanceX, distanceY, pointerX0, pointerY0;
-    var xr = 18,
-      yr = 20;
-    var cornerRadius = 5;
+    var c = document.getElementById('experiment');
+    var ctx = c.getContext("2d");
     var xmeasurements = [];
 
-    d.addEventListener('mousedown', mouseDown, false);
+    c.addEventListener('mousedown', mouseDown, false);
     window.addEventListener('mouseup', mouseUp, false);
-    d.addEventListener('touchstart', touchStart, false);
-    d.addEventListener('touchmove', touchMove, false);
-
-    function initialize() {
-      window.addEventListener('resize', resizeCanvas, false);
-      resizeCanvas();
-    }
-
-    function resizeCanvas() {
-      if (window.innerWidth <= 1000 && window.innerWidth >= 500) {
-        scale = (window.innerWidth - 4) / 996;
-        d.width = 996 * scale;
-        d.height = 1000 * scale;
-        dctx.scale(2 * scale, 2 * scale);
-        document.body.style.fontSize="1.6vw";
-      }
-      if (window.innerWidth > 1000) {
-
-        d.width = 996;
-        d.height = 1000;
-        dctx.scale(2, 2);
-        document.body.style.fontSize="16px";
-      }
-      if (window.innerWidth < 500) {
-        scale = (window.innerWidth - 4) / 496;
-        d.width = 996 * scale;
-        d.height = 1000 * scale;
-        dctx.scale(2 * scale, 2 * scale);
-        document.body.style.fontSize="3.2vw";
-      }
-
-
-      dctx.save();
-      drawGlass();
-      dctx.restore();
-      drawDesk();
-      drawRuler();
-      dctx.rect(376, 8, 31, 25);
-      dctx.moveTo(376, 32);
-      dctx.lineTo(17, 120);
-      dctx.moveTo(407, 33);
-      dctx.lineTo(481, 121);
-      dctx.stroke();
-    }
-
-    initialize();
+    c.addEventListener('touchstart', touchStart, false);
+    c.addEventListener('touchmove', touchMove, false);
+resizeCanvas('experiment',996,1000);
+    window.addEventListener('resize', resizeCanvas('experiment',996,1000), false);
+      resizeFonts();
+    window.addEventListener('resize', resizeFonts, false);
+  drawEverything();
+    window.addEventListener('resize', drawEverything, false);
 
 
     function writeMeasurement() {
@@ -225,36 +129,33 @@
       document.getElementById("average").innerHTML = (xsum / n).toFixed(2);
     }
 
-    function hideDIV() {
-      this.toggle = !this.toggle;
-      var target = document.getElementById('deskDIV');
-      if (this.toggle) {
-        newWidth = target.style.width;
-        target.style.width = 0 + "px";
-        document.getElementById('hide-button').classList.remove("fa-eye-slash");
-        document.getElementById('hide-button').classList.add("fa-eye");
-        document.getElementById('hide-button').title = "Δείξε το θρανίο";
-      } else {
-        target.style.width = newWidth;
-        document.getElementById('hide-button').classList.remove("fa-eye");
-        document.getElementById('hide-button').classList.add("fa-eye-slash");
-        document.getElementById('hide-button').title = "Κρύψε το θρανίο";
-      }
+    function drawEverything() {
+      ctx.save();
+      drawGlass();
+      ctx.restore();
+      drawDesk();
+      drawRuler();
+      ctx.rect(376, 8, 31, 25);
+      ctx.moveTo(376, 32);
+      ctx.lineTo(17, 120);
+      ctx.moveTo(407, 33);
+      ctx.lineTo(481, 121);
+      ctx.stroke();
     }
 
     function touchStart(event) {
-      pointerX = (event.targetTouches[0].pageX - d.offsetLeft) / scale;
-      pointerY = (event.targetTouches[0].pageY - d.offsetTop) / scale;
+      pointerX = (event.targetTouches[0].pageX - c.offsetLeft) / scale;
+      pointerY = (event.targetTouches[0].pageY - c.offsetTop) / scale;
       event.preventDefault();
       pointerX0 = pointerX;
       pointerY0 = pointerY;
-      d.addEventListener('touchmove', touchMove, false);
+      c.addEventListener('touchmove', touchMove, false);
     }
 
     function touchMove(event) {
       event.preventDefault();
-      pointerX = (event.targetTouches[0].pageX - d.offsetLeft) / scale;
-      pointerY = (event.targetTouches[0].pageY - d.offsetTop) / scale;
+      pointerX = (event.targetTouches[0].pageX - c.offsetLeft) / scale;
+      pointerY = (event.targetTouches[0].pageY - c.offsetTop) / scale;
       distanceX = pointerX - pointerX0;
       distanceY = pointerY - pointerY0;
       if (pointerX0 < xr + 460 && pointerX0 > xr && pointerY0 > yr && pointerY0 < yr + 20) {
@@ -267,27 +168,21 @@
       }
       pointerX0 = pointerX;
       pointerY0 = pointerY;
-      dctx.save();
-      dctx.clearRect(0, 0, 500, 500);
-      drawGlass();
-      drawDesk();
-      drawRuler();
-      dctx.rect(376, 8, 31, 25);
-      dctx.stroke();
+      drawEverything();
     }
 
     function mouseDown(event) {
-      pointerX = (event.pageX - d.offsetLeft) / scale;
-      pointerY = (event.pageY - d.offsetTop) / scale;
+      pointerX = (event.pageX - c.offsetLeft) / scale;
+      pointerY = (event.pageY - c.offsetTop) / scale;
       event.preventDefault();
       pointerX0 = pointerX;
       pointerY0 = pointerY;
-      d.addEventListener('mousemove', moveRuler, false);
+      c.addEventListener('mousemove', moveRuler, false);
     }
 
     function moveRuler(event) {
-      pointerX = (event.pageX - d.offsetLeft) / scale;
-      pointerY = (event.pageY - d.offsetTop) / scale;
+      pointerX = (event.pageX - c.offsetLeft) / scale;
+      pointerY = (event.pageY - c.offsetTop) / scale;
       event.preventDefault();
       distanceX = pointerX - pointerX0;
       distanceY = pointerY - pointerY0;
@@ -301,126 +196,96 @@
       }
       pointerX0 = pointerX;
       pointerY0 = pointerY;
-      dctx.clearRect(0, 0, 500, 500);
-      dctx.save();
-      drawGlass();
-      dctx.restore();
-      drawDesk();
-      drawRuler();
-      dctx.rect(376, 8, 31, 25);
-      dctx.stroke();
+      ctx.clearRect(0, 0, 500, 500);
+      drawEverything();
     }
 
     function mouseUp(event) {
       event.preventDefault();
-      d.removeEventListener('mousemove', moveRuler, false);
+      c.removeEventListener('mousemove', moveRuler, false);
     }
 
     function drawDesk() {
-      drawRect(38, 10, 360, 102);
-      dctx.fillStyle = "#CF912E";
-      dctx.fill();
-      drawRect(40, 10, 358, 100);
+      drawRect(38, 10, 360, 102,5, 'experiment');
+      ctx.fillStyle = "#CF912E";
+      ctx.fill();
+      drawRect(40, 10, 358, 100,5, 'experiment');
 
-      dctx.fillStyle = "#D2E8D7";
-      dctx.fill();
+      ctx.fillStyle = "#D2E8D7";
+      ctx.fill();
 
     }
 
     function drawRuler() {
-      drawRect(xr, yr, 460, 20);
+      drawRect(xr, yr, 460, 20,5, 'experiment');
       drawMajorGridlines(xr, yr);
     }
     //Draw gridlines
-
     function drawMajorGridlines(xr, yr) {
-      dctx.beginPath();
-
-      dctx.lineWidth = 0.2;
-      dctx.strokeStyle = "#333";
+      ctx.beginPath();
+      ctx.lineWidth = 0.2;
+      ctx.strokeStyle = "#333";
       for (j = 0; j < 31; j++) {
-        dctx.moveTo(xr + 5 + 15 * j, yr);
-        dctx.lineTo(xr + 5 + 15 * j, yr + 5);
+        ctx.moveTo(xr + 5 + 15 * j, yr);
+        ctx.lineTo(xr + 5 + 15 * j, yr + 5);
       }
-      dctx.stroke();
-      dctx.beginPath();
-      dctx.fillStyle = "#333";
-      dctx.font = "6px BPTypewrite";
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.font = "6px BPTypewrite";
+      ctx.fillStyle = "#333";
       for (j = 0; j < 15; j++) {
-        dctx.fillText(j * 10, xr + 3 + 30 * j, yr + 10);
+        ctx.fillText(j * 10, xr + 3 + 30 * j, yr + 10);
+        ctx.fill();
       }
-      dctx.stroke();
+
     }
 
     function drawGridlines(xr, yr) {
-      dctx.beginPath();
-      dctx.fillStyle = "#333";
-      dctx.lineWidth = 0.05;
-      dctx.strokeStyle = "#333";
+      ctx.beginPath();
+      ctx.fillStyle = "#333";
+      ctx.lineWidth = 0.05;
+      ctx.strokeStyle = "#333";
       for (j = 0; j < 151; j++) {
-        dctx.moveTo(xr + 5 + 3 * j, yr);
-        dctx.lineTo(xr + 5 + 3 * j, yr + 3);
+        ctx.moveTo(xr + 5 + 3 * j, yr);
+        ctx.lineTo(xr + 5 + 3 * j, yr + 3);
       }
       for (j = 0; j < 301; j++) {
-        dctx.moveTo(xr + 5 + 1.5 * j, yr);
-        dctx.lineTo(xr + 5 + 1.5 * j, yr + 2);
+        ctx.moveTo(xr + 5 + 1.5 * j, yr);
+        ctx.lineTo(xr + 5 + 1.5 * j, yr + 2);
       }
-      dctx.stroke();
+      ctx.stroke();
     }
 
     function drawMinorGridlines(xr, yr) {
-      dctx.beginPath();
-      dctx.fillStyle = "#333";
-      dctx.lineWidth = 0.01;
-      dctx.strokeStyle = "#333";
+      ctx.beginPath();
+      ctx.fillStyle = "#333";
+      ctx.lineWidth = 0.01;
+      ctx.strokeStyle = "#333";
       for (j = 0; j < 1501; j++) {
-        dctx.moveTo(xr + 5 + 0.3 * j, yr);
-        dctx.lineTo(xr + 5 + 0.3 * j, yr + 1);
+        ctx.moveTo(xr + 5 + 0.3 * j, yr);
+        ctx.lineTo(xr + 5 + 0.3 * j, yr + 1);
       }
-      dctx.stroke();
+      ctx.stroke();
     }
 
     function drawGlass() {
-      dctx.beginPath();
-      dctx.scale(15, 15);
-      dctx.rect(376 - 375, 8, 31, 25);
-      dctx.lineWidth = 0.05;
-      dctx.stroke();
-      dctx.clip();
-      drawRect(-335, 10, 358, 100);
-      dctx.fillStyle = "#D2E8D7";
-      dctx.fill();
-      drawRect(xr - 375, yr, 460, 20);
+      ctx.beginPath();
+      ctx.scale(15, 15);
+      ctx.rect(376 - 375, 8, 31, 25);
+      ctx.lineWidth = 0.05;
+      ctx.stroke();
+      ctx.clip();
+      drawRect(-335, 10, 358, 100, 5,'experiment');
+      ctx.fillStyle = "#D2E8D7";
+      ctx.fill();
+      drawRect(xr - 375, yr, 460, 20, 5,'experiment');
       drawMajorGridlines(xr - 375, yr);
       drawGridlines(xr - 375, yr);
       drawMinorGridlines(xr - 375, yr);
-      dctx.scale(1 / 15, 1 / 15);
-      dctx.restore();
-    }
-
-    function drawRect(rectX, rectY, rectWidth, rectHeight) {
-      dctx.beginPath();
-      dctx.moveTo(rectX, rectY + cornerRadius);
-      dctx.arcTo(rectX, rectY, rectX + cornerRadius, rectY, cornerRadius);
-      dctx.lineTo(rectX + rectWidth - cornerRadius, rectY);
-      dctx.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + cornerRadius, cornerRadius);
-      dctx.lineTo(rectX + rectWidth, rectY + rectHeight - cornerRadius);
-      dctx.arcTo(rectX + rectWidth, rectY + rectHeight, rectX + rectWidth - cornerRadius, rectY + rectHeight, cornerRadius);
-      dctx.lineTo(rectX + cornerRadius, rectY + rectHeight);
-      dctx.arcTo(rectX, rectY + rectHeight, rectX, rectY + rectHeight - cornerRadius, cornerRadius);
-      dctx.lineTo(rectX, rectY + cornerRadius);
-      dctx.closePath();
-      var grd = dctx.createLinearGradient(rectX, rectY, rectX + rectWidth, rectY + rectHeight);
-      grd.addColorStop(0, "#f4f4f4");
-      grd.addColorStop(1, "#fff");
-      dctx.fillStyle = grd;
-      dctx.fill();
-      dctx.strokeStyle = "#59A8A4";
-      dctx.lineWidth = 0.1;
-      dctx.stroke();
+      ctx.scale(1 / 15, 1 / 15);
+      ctx.restore();
     }
   </script>
-
 </body>
 
 </html>
