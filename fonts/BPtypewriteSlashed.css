@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'BPtypewriteSlashed';
+    src: url('BPtypewriteSlashed.eot'); /* IE9 Compat Modes */
+    src: url('BPtypewriteSlashed.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('BPtypewriteSlashed.woff') format('woff'), /* Modern Browsers */
+         url('BPtypewriteSlashed.ttf') format('truetype'); /* Safari, Android, iOS */
+    font-style: normal;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}

@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'BPtypewriteDamagedUnderscored';
+    src: url('BPtypewriteDamagedUnderscoredItalic.eot'); /* IE9 Compat Modes */
+    src: url('BPtypewriteDamagedUnderscoredItalic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('BPtypewriteDamagedUnderscoredItalic.woff') format('woff'), /* Modern Browsers */
+         url('BPtypewriteDamagedUnderscoredItalic.ttf') format('truetype'); /* Safari, Android, iOS */
+    font-style: italic;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}

@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'BPtypewriteDamagedSlashed';
+    src: url('BPtypewriteDamagedSlashed.eot'); /* IE9 Compat Modes */
+    src: url('BPtypewriteDamagedSlashed.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('BPtypewriteDamagedSlashed.woff') format('woff'), /* Modern Browsers */
+         url('BPtypewriteDamagedSlashed.ttf') format('truetype'); /* Safari, Android, iOS */
+    font-style: normal;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}
