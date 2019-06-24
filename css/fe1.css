@@ -1,0 +1,106 @@
+@font-face {
+    font-family: 'BPtypewrite';
+    src: url('../fonts/BPtypewrite.eot');
+    /* IE9 Compat Modes */
+    src: url('../fonts/BPtypewrite.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('../fonts/BPtypewrite.woff') format('woff'),
+        /* Modern Browsers */
+        url('../fonts/BPtypewrite.ttf') format('truetype');
+    /* Safari, Android, iOS */
+    font-style: normal;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    color: #333;
+    font-family: BPtypewrite, 'Arial Narrow', sans-serif;
+    font-size: 16px;
+    background: white;
+    box-shadow: 0px 0px 0px 1px #ccc inset;
+}
+
+
+
+header,
+footer {
+    height: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+main {
+    height: 90%;
+    display: flex;
+    border-top: #ccc 1px solid;
+    border-bottom: #ccc 1px solid;
+}
+
+main>div {
+    flex: 1 0 0;
+    text-align: center;
+
+}
+
+main>div>div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#experimentDIV {
+    display: block;
+}
+
+.measurement {
+    position: absolute;
+    left: 35%;
+    transform: translate(-50%, -50%);
+    color: #008982;
+    font-size: 0.9em;
+}
+
+#sum {
+    position: absolute;
+    left: 35%;
+    top: 87%;
+    transform: translate(-50%, -50%);
+    color: #008982
+}
+
+#average {
+    position: absolute;
+    left: 78%;
+    top: 47%;
+    transform: translate(-50%, -50%);
+    color: #008982
+}
+
+.imageContainer {
+    position: relative;
+    text-align: center;
+    clear: left;
+}
+
+.myCanvas-button {
+    padding: .4em 1em;
+    display: inline-block;
+    position: relative;
+    line-height: normal;
+    margin-right: .1em;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: visible;
+}
