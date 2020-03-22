@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Φύλλο εργασίας 3</title>
+  <link rel="stylesheet" href="https://physiquiz.gr/wp-content/uploads/fonts/BPtypewrite.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+    integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/fe3-2.css">
+</head>
+
+<body>
+  <div class="bordered">
+    <div class="container">
+      <div class="third half-full"><span style="font-weight:bold"> Φύλλο εργασίας 3 </span>
+        <hr>
+      </div>
+      <div class="third half-full"><span>Πείραμα 2</span>
+        <hr>
+      </div>
+      <div class="third half-full"><span>&copy Περί ΦυσιQuiz</span>
+        <hr>
+      </div>
+    </div>
+    <hr>
+    <div id="control" class="half">
+
+      <div class="container">
+        <!-- Πίνακας μετρήσεων -->
+        <img src="img/fe3-2.png" alt=" Φύλλο εργασίας 3" style="width:80%;">
+        <input class="input" style="top: 33%;" type="number" placeholder="πχ 1.5" step="0.1" min="0" max="60"
+          onkeydown="showCheckButton(event,1,this)" onclick="showCheckButton(event,1,this)">
+        <i class="fas fa-arrow-right myCanvas-button check" style="color:#333;top:33%"
+          onclick="checkOrCancel(1,this)"></i>
+        <input class="input" style="top: 44.5%;" type="number" placeholder="" step="0.1" min="0" max="60"
+          onkeydown="showCheckButton(event,2,this);" onclick="showCheckButton(event,2,this)">
+        <i class="fas fa-arrow-right myCanvas-button check" style="color:#333;top:44.5%"
+          onclick="checkOrCancel(2,this)"></i>
+        <input class="input" style="top: 56%;" type="number" placeholder="" step="0.1" min="0" max="60"
+          onkeydown="showCheckButton(event,3,this);" onclick="showCheckButton(event,3,this)">
+        <i class="fas fa-arrow-right myCanvas-button check" style="color:#333;top:56%"
+          onclick="checkOrCancel(3,this)"></i>
+        <input class="input" style="top: 67.5%;" type="number" placeholder="" step="0.1" min="0" max="60"
+          onkeydown="showCheckButton(event,4,this);" onclick="showCheckButton(event,4,this)">
+        <i class="fas fa-arrow-right myCanvas-button check" style="color:#333;top:67.5%"
+          onclick="checkOrCancel(4,this)"></i>
+        <input class="input" style="top: 79%;" type="number" placeholder="" step="0.1" min="0" max="60"
+          onkeydown="showCheckButton(event,5,this);" onclick="showCheckButton(event,5,this)">
+        <i class="fas fa-arrow-right myCanvas-button check" style="color:#333;top:79%"
+          onclick="checkOrCancel(5,this)"></i>
+        <input class="input" style="top: 90.5%;" type="number" placeholder="" step="0.1" min="0" max="60"
+          onkeydown="showCheckButton(event,6,this);" onclick="showCheckButton(event,6,this)">
+        <i class="fas fa-arrow-right myCanvas-button check" style="color:#333;top:90.5%"
+          onclick="checkOrCancel(6,this)"></i>
+      </div>
+      <i class="fas fa-chart-line myCanvas-button" style="color:#333" onclick="drawPlotLine();"></i><button
+        onclick="drawPlotLine();">ΣΧΕΔΙΑΣΕ ΤΟ ΔΙΑΓΡΑΜΜΑ</button>
+      <i id="hide-button" class="fa fa-eye-slash myCanvas-button" style="color:#333" onclick="hideDIV();"
+        title="Κρύψε το ελατήριο"></i>
+      <!-- Διάγραμμα -->
+      <canvas id="plot" style="width:100%">Please update your browser!</canvas>
+    </div>
+    <div id="weightsDIV" class=" half">
+      <!-- Προσομοίωση -->
+      <canvas id="spring" style="width:100%">Update your browser</canvas>
+    </div>
+    <p id="demo"></p>
+  </div>
+  <script src="js/fe3-2.js"></script>
+</body>
+
+</html>

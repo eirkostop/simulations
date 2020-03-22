@@ -1,0 +1,106 @@
+#weightsDIV {
+    overflow: hidden;
+    transition: width 1s;
+    -webkit-transition: width 1s;
+}
+
+.third {
+    width: 33.333%;
+    float: left;
+    text-align: center;
+}
+
+.half {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+@media only screen and (max-width:500px) {
+
+    /* For mobile phones: */
+    .half-full {
+        width: 100%;
+    }
+}
+
+button {
+    font-size: 1.2vw;
+    cursor: pointer;
+    background-color: #008982;
+    border: 0;
+    border-radius: 2px;
+    color: #fff;
+    font-weight: 700;
+    padding: 6px;
+    margin: 2px;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+button:hover {
+    filter: brightness(110%);
+}
+
+.myCanvas-button {
+    padding: .4em 1em;
+    display: inline-block;
+    line-height: normal;
+    margin-right: .1em;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: visible;
+}
+
+.input {
+    position: absolute;
+    left: 49%;
+    transform: translate(-50%, -50%);
+    height: 5%;
+    width: 7.5%;
+    font-size: 1.1vw;
+    border-bottom: none;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+
+hr {
+    height: 2px;
+    border-width: 0;
+    background-color: #ccc
+}
+
+.bordered {
+    background: white;
+    border: #ccc 2px solid;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 0 5px 0;
+    min-height: 600px
+}
+
+.container {
+    position: relative;
+    text-align: center;
+    clear: left;
+
+}
+
+body {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #333;
+    font-family: BPTypewrite, sans-serif, 'Arial Narrow';
+    margin-top: auto;
+    background: transparent;
+    font-size: 16px;
+}

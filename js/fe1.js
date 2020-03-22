@@ -41,7 +41,6 @@ function makeResponsive(ctx, initialCanvasWidth, initialCanvasHeight) {
         ctx.canvas.width = canvasRatio * c.height;
         scale = 2 * ctx.canvas.height / initialCanvasHeight;
         ctx.scale(scale, scale);
-
     } else {
         ctx.canvas.width = divWidth;
         ctx.canvas.height = ctx.canvas.width / canvasRatio;

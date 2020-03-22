@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Oscillator</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+	<style>
+.myCanvas-button {
+    padding: .4em 1em;
+    display: inline-block;
+    position: relative;
+    line-height: normal;
+    margin-right: .1em;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: visible;
+}
+</style>
+
+	</head>
+
+<body style="margin:0;">
+
+  <div  style="width:300px; margin-left:auto; margin-right:auto;">
+  <div style="position:absolute; z-index:2; margin:5px;">
+  <div style="width:300px; float: left; text-align:center;">
+  <i class="fa fa-play myCanvas-button"  style="color:#404040" onclick="startMotion();" title="Έναρξη"></i>
+  <i class="fa fa-pause myCanvas-button"  style="color:#404040" onclick="stopMotion();" title="Παύση"></i>
+<i class="fa fa-redo myCanvas-button"  style="color:#404040" onclick="restartMotion();" title="Επανεκκίνηση"></i>  
+</div>
+</div>
+<canvas style="background:white" id="oscillatorCanvas" width="300" height="120">
+</canvas>
+  </div>
+  
+
+<script>
+var oscillatorCanvas = document.getElementById("oscillatorCanvas");
+var oscillatorContext = oscillatorCanvas.getContext("2d");
+var x1=135;
+var x2=135;
+var t=0;
+var timer;
+var scale=1;
+			initialize();
+ 
+			function initialize() {
+				window.addEventListener('resize', resizeCanvas, false);
+				resizeCanvas();
+			}
+			function resizeCanvas() {
+			if(window.innerWidth<300){
+			scale=window.innerWidth/300;oscillatorCanvas.width=300*scale;oscillatorCanvas.height=120*scale; oscillatorContext.scale(scale,scale);}
+			if(window.innerWidth>=300){oscillatorCanvas.width = 300; oscillatorCanvas.height=120;}
+				drawOscillator();
+			}
+
+  function drawOscillator() {
+  oscillatorContext.clearRect(0, 0, 300, 120);
+  x1=135+130*Math.sin(t);
+  oscillatorContext.beginPath();
+  oscillatorContext.fillStyle="#5BB3AF";
+  oscillatorContext.fillRect(x1,45,30,30);
+  
+  x2=135+130*Math.sin(t/4);
+  oscillatorContext.beginPath();
+  oscillatorContext.fillStyle="#5BB3AF";
+  oscillatorContext.fillRect(x2,85,30,30);
+  
+  oscillatorContext.beginPath();
+
+oscillatorContext.moveTo(20,60);
+oscillatorContext.lineTo(280,60);
+oscillatorContext.moveTo(20,55);
+oscillatorContext.lineTo(20,65);
+oscillatorContext.moveTo(150,55);
+oscillatorContext.lineTo(150,65);
+oscillatorContext.moveTo(280,55);
+oscillatorContext.lineTo(280,65);
+oscillatorContext.moveTo(20,100);
+oscillatorContext.lineTo(280,100);
+oscillatorContext.moveTo(20,95);
+oscillatorContext.lineTo(20,105);
+oscillatorContext.moveTo(150,95);
+oscillatorContext.lineTo(150,105);
+oscillatorContext.moveTo(280,95);
+oscillatorContext.lineTo(280,105);
+oscillatorContext.stroke();
+  }
+  
+  drawOscillator();
+  function moveOscillator () {
+  
+  t += 0.1;
+	drawOscillator();
+    timer=window.setTimeout(moveOscillator, 1000/30);
+	}
+
+	
+ function startMotion(){
+ window.clearTimeout(timer);
+ moveOscillator();}
+  function stopMotion(){
+ window.clearTimeout(timer);
+}
+  function restartMotion(){
+ x1=135;x2=135;
+	t=0;
+	drawOscillator();
+ window.clearTimeout(timer);
+ 
+}
+</script>
+
+</body>
+</html>
+

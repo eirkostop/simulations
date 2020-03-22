@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Φύλλο εργασίας 2</title>
+  <link rel="stylesheet" type="text/css" href="simulations.css">
+  
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+  <style>
+    .measurement {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      color: #008982;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+      <p style="font-weight:bold">Φύλλο εργασίας 2</p>
+      <p>© Περί ΦυσιQuiz</p>
+  </header>
+  <main>
+    <div>
+        <div >
+          <i id="play-pause-button" class="fa fa-play myCanvas-button" style="color:#333" onclick="playPause();" title="Έναρξη Μέτρησης Χρόνου"></i>
+          <i class="fa fa-times myCanvas-button" style="color:#333" onclick="undoMotion();" title="Ακύρωση Τλευταίας Μέτρησης"></i>
+          <i class="fa fa-calculator myCanvas-button" style="color:#333" onclick="calculate();" title="Υπολόγισε τη μέση τιμή"></i>
+          <i id="hide-button" class="fa fa-eye-slash myCanvas-button" style="color:#333" onclick="hideDIV('experimentDIV','experimentControls');" title="Κρύψε το εκκρεμές"></i>
+        </div>
+        <div>
+          <canvas style="position:relative; background:white" id="analog" width="124" height="125">Please update your browser!</canvas>
+          <canvas style="position:relative; background:white" id="digital" width="124" height="125">Please update your browser!</canvas>
+        </div>
+        <div class='imageContainer'>
+          <img src="fe2.png" alt=" Φύλλο εργασίας 2" style="width:100%;">
+          <p class="measurement" id="1" style="
+          left: 23%;top:21%"></p>
+          <p class="measurement" id="2" style="
+          left: 23%;top:27.2%"></p>
+          <p class="measurement" id="3" style="
+          left: 23%;top:33.4%"></p>
+          <p class="measurement" id="4" style="
+          left: 23%;top:39.6%"></p>
+          <p class="measurement" id="5" style="
+          left: 23%;top:45.8%"></p>
+          <p class="measurement" id="6" style="
+          left: 23%;top:52.5%"></p>
+          <p class="measurement" id="7" style="
+          left: 23%;top:58.6%"></p>
+          <p class="measurement" id="8" style="
+          left: 23%;top:64.7%"></p>
+          <p class="measurement" id="9" style="
+          left: 23%;top:70.8%"></p>
+          <p class="measurement" id="10" style="
+          left: 23%;top:76.9%"></p>
+          <p class="measurement" id="tsum" style="
+          left: 23%;top:86%"></p>
+          <p class="measurement" id="taverage" style="
+          left: 45%;top:49%"></p>
+          <p class="measurement" id="11" style="
+          left: 67%;top:21%"></p>
+          <p class="measurement" id="12" style="
+          left: 67%;top:27.2%"></p>
+          <p class="measurement" id="13" style="
+          left: 67%;top:33.4%"></p>
+          <p class="measurement" id="14" style="
+          left: 67%;top:39.6%"></p>
+          <p class="measurement" id="15" style="
+          left: 67%;top:45.8%"></p>
+          <p class="measurement" id="16" style="
+          left: 67%;top:52.5%"></p>
+          <p class="measurement" id="17" style="
+          left: 67%;top:58.6%"></p>
+          <p class="measurement" id="18" style="
+          left: 67%;top:64.7%"></p>
+          <p class="measurement" id="19" style="
+          left: 67%;top:70.8%"></p>
+          <p class="measurement" id="20" style="
+          left: 67%;top:76.9%"></p>
+          <p class="measurement" id="ttsum" style="
+          left: 67%;top:86%"></p>
+          <p class="measurement" id="ttaverage" style="
+          left: 89%;top:49%"></p>
+        </div>
+    </div>
+    <div id="experimentDIV">
+      <canvas id="pendulum" style="width:100%"></canvas>
+      <br>
+      <div id="experimentControls">
+        <div>
+          <i id="play-pause2" class="fa fa-play myCanvas-button" style="color:#333" onclick="playPause();" title="Έναρξη μέτρησης"></i>
+          <i class="fa fa-times myCanvas-button" style="color:#333" onclick="undoMotion();" title="Ακύρωση Μέτρησης"></i>
+          </div>
+          <div>
+            <p>Γωνία εκτροπής: <span id="myReadout">10</span>°.</p>
+            <p><input type="range" class="mySlider" id="mySlider" min="-50" max="50" step="1" value="10" oninput="showAngle();drawPendulum();" onchange="showAngle();drawPendulum();"></p>
+          </div>
+        </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="simulations.js"></script>
+  <script>
+    var a = document.getElementById('analog')
+    var actx = a.getContext("2d");
+    var d = document.getElementById('digital')
+    var dctx = d.getContext("2d");
+    var p = document.getElementById('pendulum')
+    var pctx = p.getContext("2d");
+    var x, y, t = 0,
+      tt = 0;
+    var timer;
+    var tmeasurements = [];
+    var ttmeasurements = [];
+    var theta, xx = 250,
+      yy = 210;
+    resizeCanvas('pendulum', 1000, 700);
+    window.addEventListener('resize', resizeCanvas('pendulum', 996, 700), false);
+    resizeFonts();
+    window.addEventListener('resize', resizeFonts, false);
+    resizeClocks();
+    window.addEventListener('resize', resizeClocks, false);
+    drawEverything();
+    window.addEventListener('resize', drawEverything, false);
+
+
+    function drawEverything() {
+      drawClock(125, 125);
+      drawDigital(125, 125);
+      drawPendulum();
+      showAngle();
+    }
+
+    function resizeClocks() {
+      if (window.innerWidth < 1000 & window.innerWidth > 500) {
+        scale = window.innerWidth / 1000;
+        a.width = 124 * scale;
+        a.height = 125 * scale;
+        d.width = 124 * scale;
+        d.height = 125 * scale;
+        actx.scale(0.5 * scale, 0.5 * scale);
+        dctx.scale(0.5 * scale, 0.5 * scale);
+      }
+      if (window.innerWidth <= 500) {
+        scale = window.innerWidth / 500;
+        a.width = 124 * scale;
+        a.height = 125 * scale;
+        d.width = 124 * scale;
+        d.height = 125 * scale
+        actx.scale(0.5 * scale, 0.5 * scale);
+        dctx.scale(0.5 * scale, 0.5 * scale);
+      }
+      if (window.innerWidth >= 1000) {
+        a.width = 124;
+        a.height = 125;
+        actx.scale(0.5, 0.5);
+        d.width = 124;
+        d.height = 125;
+        dctx.scale(0.5, 0.5);
+      }
+    }
+
+    function drawPendulum() {
+      var theta0 = document.getElementById("mySlider").value;
+      xx = 250 + 300 * Math.sin(theta0 * Math.PI / 180 * Math.cos(4 * tt));
+      yy = 10 + 300 * Math.cos(theta0 * Math.PI / 180 * Math.cos(4 * tt));
+      pctx.clearRect(0, 0, 1000, 600);
+      pctx.beginPath();
+      pctx.moveTo(250, 10);
+      pctx.lineTo(xx, yy);
+      pctx.strokeStyle = "grey";
+      pctx.lineWidth = 1;
+      pctx.stroke();
+      pctx.beginPath();
+      pctx.arc(xx, yy, 10, 0, 2 * Math.PI);
+      var theGradient = pctx.createRadialGradient(
+        xx - 1, yy - 2, 1, xx, yy, 5);
+      theGradient.addColorStop(0, "#5BB3AF");
+      theGradient.addColorStop(1, "#008982");
+      pctx.fillStyle = theGradient;
+      pctx.fill();
+      pctx.beginPath();
+
+      var grd = pctx.createLinearGradient(0, 0, 496, 0);
+      grd.addColorStop(0, "white");
+      grd.addColorStop(0.5, "#5BB3AF");
+      grd.addColorStop(1, "white");
+      pctx.fillStyle = grd;
+      pctx.fillRect(0, 0, 500, 10);
+    }
+
+    function drawClock(x0, y0) {
+      x = x0 + 90 * Math.cos(2 * Math.PI / 60 * t - Math.PI / 2);
+      y = y0 + 90 * Math.sin(2 * Math.PI / 60 * t - Math.PI / 2);
+      //Draw clock
+      actx.beginPath();
+      actx.arc(x0, y0, 100, 0, 2 * Math.PI);
+      actx.lineWidth = 2;
+      actx.fillStyle = "#EDFAFF";
+      actx.fill();
+      //Draw tickmarks
+      for (var j = 0; j < 60; j++) {
+        actx.beginPath();
+        actx.moveTo(x0 + 100 * Math.cos(2 * Math.PI / 60 * j), y0 + 100 * Math.sin(2 * Math.PI / 60 * j));
+        actx.lineTo(x0 + 95 * Math.cos(2 * Math.PI / 60 * j), y0 + 95 * Math.sin(2 * Math.PI / 60 * j));
+        actx.lineWidth = 2;
+        actx.strokeStyle = "rgb(91, 179, 175)";
+        actx.stroke();
+      }
+      for (var i = 0; i < 13; i++) {
+        actx.beginPath();
+        actx.moveTo(x0 + 100 * Math.cos(2 * Math.PI / 12 * i), y0 + 100 * Math.sin(2 * Math.PI / 12 * i));
+        actx.lineTo(x0 + 80 * Math.cos(2 * Math.PI / 12 * i), y0 + 80 * Math.sin(2 * Math.PI / 12 * i));
+        actx.lineWidth = 2;
+        actx.strokeStyle = "rgb(91, 179, 175)";
+        actx.stroke();
+      }
+      //Draw indexes
+      actx.beginPath();
+      actx.moveTo(x0, y0);
+      actx.lineTo(x, y);
+      actx.lineWidth = 3;
+      actx.strokeStyle = "#333";
+      actx.stroke();
+      actx.beginPath();
+      actx.arc(x, y, 2, 0, 2 * Math.PI);
+      actx.arc(x0, y0, 2, 0, 2 * Math.PI);
+      actx.fillStyle = "#333";
+      actx.fill();
+    }
+
+    function drawDigital(x0, y0) {
+
+      //Draw clock
+      dctx.beginPath();
+      dctx.arc(x0, y0, 100, 0, 2 * Math.PI);
+      dctx.lineWidth = 2;
+      dctx.fillStyle = "#EDFAFF";
+      dctx.fill();
+      drawScreen(x0 - 80, y0 - 40, 160, 80);
+    }
+
+    function moveClock() {
+      dctx.clearRect(0, 0, d.width, d.height);
+      actx.clearRect(0, 0, a.width, a.height);
+      tt = new Date().getTime() / 1000 - start + pauseTime;
+      t = tt.toFixed(0);
+      timer = window.setTimeout(moveClock, 1000 / 60);
+      drawClock(125, 125);
+      drawDigital(125, 125);
+      drawPendulum();
+    }
+    var start, pauseTime = 0;
+
+    function startMotion() {
+      start = new Date().getTime() / 1000;
+      window.clearTimeout(timer);
+      moveClock();
+    }
+
+    function stopMotion() {
+      pauseTime = tt;
+      window.clearTimeout(timer);
+      tmeasurements.push(t);
+      ttmeasurements.push(tt.toFixed(2));
+      writemeasurements();
+      document.getElementById('tsum').innerHTML = "";
+        document.getElementById('ttsum').innerHTML = "";
+        document.getElementById('taverage').innerHTML = "";
+        document.getElementById('ttaverage').innerHTML = "";
+    }
+
+    function writemeasurements() {
+      if (tmeasurements.length < 11) {
+        document.getElementById(tmeasurements.length).innerHTML = tmeasurements[tmeasurements.length - 1];
+        document.getElementById(ttmeasurements.length + 10).innerHTML = ttmeasurements[ttmeasurements.length - 1];
+      }
+    }
+
+    function restartMotion() {
+      x = 50;
+      y = 100;
+      t = 0;
+      tt = 0;
+      drawClock(125, 125);
+      drawDigital(125, 125);
+      drawPendulum();
+      window.clearTimeout(timer);
+      pauseTime = 0;
+    }
+
+    function undoMotion() {
+      if (tmeasurements.length < 11 && tmeasurements.length > 0) {
+        document.getElementById(tmeasurements.length).innerHTML = "";
+        document.getElementById(ttmeasurements.length + 10).innerHTML = "";
+        document.getElementById('tsum').innerHTML = "";
+        document.getElementById('ttsum').innerHTML = "";
+        document.getElementById('taverage').innerHTML = "";
+        document.getElementById('ttaverage').innerHTML = "";
+        tmeasurements.pop();
+        ttmeasurements.pop();
+      }
+    }
+
+    function calculate(){
+      var tsum = 0,
+          ttsum = 0;
+        n = 0;
+        for (i = 0; i < tmeasurements.length; i++) {
+          tsum += Number(tmeasurements[i]);
+          ttsum += Number(ttmeasurements[i]);
+          n++
+        }
+        document.getElementById('tsum').innerHTML = tsum;
+        document.getElementById('ttsum').innerHTML = ttsum.toFixed(2);
+        document.getElementById('taverage').innerHTML = (tsum / n).toFixed(0);
+        document.getElementById('ttaverage').innerHTML = (ttsum / n).toFixed(2);
+    }
+    //Draw screen
+    function drawScreen(rectX, rectY, rectWidth, rectHeight) {
+      drawRect(rectX, rectY, rectWidth, rectHeight, 5, 'digital');
+      var grd = dctx.createLinearGradient(rectX, rectY, rectX + rectWidth, rectY + rectHeight);
+      grd.addColorStop(0, "#f4f4f4");
+      grd.addColorStop(1, "#fff");
+      dctx.fillStyle = grd;
+      dctx.fill();
+      dctx.strokeStyle = "#59A8A4";
+      dctx.stroke();
+      //Draw Digits
+      dctx.beginPath();
+      dctx.font = "40px BPTypeWrite";
+      dctx.fillStyle = "#333";
+      dctx.fillText(tt.toFixed(2) + "s", rectX + 10, rectY + rectHeight / 2 + 20);
+      dctx.fill();
+    }
+
+    function showAngle() {
+      document.getElementById("myReadout").innerHTML = Number(mySlider.value).toFixed(0);
+    }
+
+    function playPause() {
+      var b = document.getElementById('play-pause-button');
+      var bb = document.getElementById('play-pause2');
+      if (b.classList.contains('fa-play')) {
+        startMotion();
+        b.classList.remove("fa-play");
+        b.classList.add("fa-pause");
+        b.title = "Παύση - Καταγραφή Μέτρησης";
+        bb.classList.remove("fa-play");
+        bb.classList.add("fa-pause");
+        bb.title = "Παύση - Καταγραφή Μέτρησης";
+      } else if (b.classList.contains('fa-pause')) {
+        stopMotion();
+        b.classList.remove("fa-pause");
+        b.classList.add("fa-redo");
+        b.title = "Επανεκκίνηση Μέτρησης";
+        bb.classList.remove("fa-pause");
+        bb.classList.add("fa-redo");
+        bb.title = "Επανεκκίνηση Μέτρησης";
+      } else if (b.classList.contains('fa-redo')) {
+        restartMotion();
+        b.classList.remove("fa-redo");
+        b.classList.add("fa-play");
+        b.title = "Έναρξη Μέτρησης Χρόνου";
+        bb.classList.remove("fa-redo");
+        bb.classList.add("fa-play");
+        bb.title = "Έναρξη Μέτρησης Χρόνου";
+      }
+    }
+
+    
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Εγκάρσιο κύμα</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<style>
+
+.half {
+    width:50%;
+  }
+@media only screen and (max-width:600px) {
+  /* For mobile phones: */
+  .half {
+    width:100%;
+  }}
+.slider {width:80%;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-moz-range-thumb {
+  background: #008982;
+  cursor: pointer;
+  width: 10px;
+  border: none;
+   left: 0;
+}
+.myCanvas-button {
+    padding: .4em 1em;
+    display: inline-block;
+    position: relative;
+    line-height: normal;
+    margin-right: .1em;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: visible;
+}
+ body{max-width:500px; margin-left:auto; margin-right:auto; color:#333;
+       font-family: BPTypewrite,sans-serif,'Arial Narrow';margin-top:auto;background:transparent; font-size:16px;}
+  
+</style></head>
+
+<body>
+<div style="background:white; border:#ccc 2px solid; border-radius:5px; text-align:center; max-width:500px; padding: 5px 0 5px 0;">
+  <div class="half" style=" float: left; text-align:center;"><span style="font-weight:bold"> Εγκάρσιο <hr style="height:2px;border-width:0;color:gray;background-color:#ccc"></span></div>
+  <div class="half" style=" float: left; text-align:center;" >  <span>&copy Περί ΦυσιQuiz</span><hr style="height:2px;border-width:0;color:gray;background-color:#ccc"></div>
+  <i class="fa fa-play myCanvas-button"  style="color:#333" onclick="startMotion();" title="Έναρξη"></i>
+  <i class="fa fa-pause myCanvas-button"  style="color:#333" onclick="stopMotion();" title="Παύση"></i>
+<i class="fa fa-redo myCanvas-button"  style="color:#333" onclick="restartMotion();" title="Επανεκκίνηση"></i>  
+
+<canvas style="position:relative; " id="myCanvas" width="100%-4px" height="250" >Please update your browser!</canvas>
+<div>
+ <div class= "half" style=" float: left; text-align:center;">
+Συχνότητα f = <span id="fReadout"></span> Hz</div>
+<div class= "half"  style="float: left; text-align:left;">
+<input type="range" class="slider" id="fSlider" min="0" max="2" step="0.1" value="1"></div>
+<div class= "half" style=" float: left; text-align:center;">Ταχύτητα υ = <span id="vReadout"></span> m/s
+</div>
+<div class= "half" style=" float: left; text-align:left;">
+<input type="range" class="slider" id="vSlider" min="100" max="300" step="10" value="200" >
+</div>
+<div class= "half" style=" float: left; text-align:center;">Μήκος  λ = <span id="lambdaReadout"></span> m, </div>
+<div class= "half" style=" float: left; text-align:center;padding-bottom:10px;">Περίοδος T= <span id="TReadout"></span> s</div>
+<p >Πρόσθεσε τα σημεία  <input type="checkbox" id="checkx1" onchange="drawx(100);"> x=100, <input type="checkbox" id="checkx2" onchange="drawx(200);"> x=200
+ </p>
+</div>
+</div>
+
+<script>
+var myCanvas = document.getElementById("myCanvas");
+var myContext = myCanvas.getContext("2d");
+var x,y;
+var t=0;
+var v=20;
+var f=0.1;
+var lambdaReadout = document.getElementById("lambdaReadout");
+lambdaReadout.innerHTML=200;
+var TReadout = document.getElementById("TReadout");
+TReadout.innerHTML=1;
+var fReadout = document.getElementById("fReadout");
+var fSlider = document.getElementById("fSlider");
+fReadout.innerHTML = fSlider.value;
+fSlider.oninput = function() {
+  fReadout.innerHTML = this.value;
+  lambda=(vSlider.value)/(fSlider.value);
+  lambdaReadout.innerHTML = Number((vReadout.innerHTML)/(fReadout.innerHTML)).toFixed(1);
+  TReadout.innerHTML=Number(1/fReadout.innerHTML).toFixed(1)}
+var vReadout = document.getElementById("vReadout");
+var vSlider = document.getElementById("vSlider");
+vReadout.innerHTML = vSlider.value;
+vSlider.oninput = function() {
+  vReadout.innerHTML = this.value;
+  lambdaReadout.innerHTML = Number((vReadout.innerHTML)/(fReadout.innerHTML)).toFixed(1);
+  TReadout.innerHTML=Number(1/fReadout.innerHTML).toFixed(1)}
+var timer;
+var scale=1;
+var i,j;
+
+			initialize();
+ 
+			function initialize() {
+				window.addEventListener('resize', resizeCanvas, false);
+				resizeCanvas();
+			}
+			function resizeCanvas() {
+			if(window.innerWidth<500){
+			scale=window.innerWidth/500;myCanvas.width=500*scale-4;myCanvas.height=250*scale; myContext.scale(scale,scale);}
+			if(window.innerWidth>=500){myCanvas.width = 496; myCanvas.height=250;}
+				drawOscillator();
+			}
+
+  function drawOscillator() {
+    myContext.clearRect(0, 0, 500, 500);
+	f=0.1* Number(fSlider.value);
+	v=0.1*Number(vSlider.value);
+  myContext.beginPath();
+  //Draw waving rope
+  for(x=20;x<470;x=x+0.5){
+  if(t<(x-20)/v){y=110;}
+  else{
+  y=110+100*Math.sin(2*Math.PI*f*(t-(x-20)/v));}
+  myContext.beginPath();
+	myContext.arc(x,y,2,0,2*Math.PI);  
+  myContext.fillStyle="#5BB3AF";
+  myContext.fill();}
+  
+
+  	//Draw oscillating points
+	drawx(0);
+	if (checkx1.checked){drawx(100);}
+	if (checkx2.checked){drawx(200);}
+	
+	//Draw gridlines
+  myContext.beginPath();
+  myContext.fillStyle="#333";
+  myContext.strokeStyle="#ccc";
+  myContext.setLineDash([2]);
+for (i=1;i<6;i++){
+myContext.moveTo(20,50*i-40);
+myContext.lineTo(470,50*i-40);
+}
+for (j=1; j<11;j++){
+myContext.moveTo(50*j-30,10);
+myContext.lineTo(50*j-30,210);
+myContext.font = "12px Arial";
+myContext.fillText(j*50-50,j*50-40,230);
+}
+myContext.stroke();
+  }
+
+  drawOscillator();
+  function moveOscillator () {
+  
+  t += 0.2;
+	drawOscillator();
+    timer=window.setTimeout(moveOscillator, 1000/60);
+	}
+
+	
+ function startMotion(){
+ window.clearTimeout(timer);
+ moveOscillator();}
+  function stopMotion(){
+ window.clearTimeout(timer);
+}
+  function restartMotion(){
+ 
+
+  x=20;y=110;
+	t=0;v=20;
+	fSlider.value=1;fReadout.innerHTML = 1;
+	vSlider.value=200;vReadout.innerHTML = 200;
+	lambdaReadout.innerHTML=200;TReadout.innerHTML=1;
+	drawOscillator();
+ window.clearTimeout(timer);
+ 
+}
+
+function drawx(checkx){
+  	//Draw oscillating points
+	var checky;
+	if (t<checkx/v){checky=110;}
+	else{checky=110+100*Math.sin(2*Math.PI*f*(t-checkx/v));}
+	myContext.beginPath();
+	myContext.arc(checkx+20,checky,5,0,2*Math.PI);  
+	myContext.fillStyle="#404040";
+	myContext.fill();
+}
+
+</script>
+
+</body>
+</html>
+

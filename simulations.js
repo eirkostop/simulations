@@ -17,7 +17,7 @@ function resizeCanvas(myCanvas,initialWidth,initialHeight) {
   var c = document.getElementById(myCanvas);
   var ctx = c.getContext("2d");
   if (window.innerWidth <= 1000 && window.innerWidth >= 500) {
-    scale = (window.innerWidth - 4) / 996;
+    scale = (window.innerWidth ) / 1000;
     c.width = initialWidth * scale;
     c.height = initialHeight * scale;
     ctx.scale(2 * scale, 2 * scale);
@@ -26,27 +26,34 @@ function resizeCanvas(myCanvas,initialWidth,initialHeight) {
     c.height = initialHeight;
     ctx.scale(2, 2);
   } else if (window.innerWidth < 500) {
-    scale = (window.innerWidth - 4) / 496;
+    scale = (window.innerWidth ) /500;
     c.width = initialWidth * scale;
     c.height = initialHeight * scale;
     ctx.scale(2 * scale, 2 * scale);
   }
 }
 
-function hideDIV(myDIV) {
+
+
+function hideDIV(myDIV,myDIV2) {
   this.toggle = !this.toggle;
   var target = document.getElementById(myDIV);
   if (this.toggle) {
     newWidth = target.style.width;
     target.style.width = 0 + "px";
+    document.getElementById(myDIV2).style.display = "none";
     document.getElementById('hide-button').classList.remove("fa-eye-slash");
     document.getElementById('hide-button').classList.add("fa-eye");
-    document.getElementById('hide-button').title = "Δείξε την προσομοίωση";
+    document.getElementById('hide-button').title = "Δείξε το εκκρεμές";
   } else {
     target.style.width = newWidth;
+
+    setTimeout(function() {
+      document.getElementById(myDIV2).style.display = "inline-block"
+    }, 1000)
     document.getElementById('hide-button').classList.remove("fa-eye");
     document.getElementById('hide-button').classList.add("fa-eye-slash");
-    document.getElementById('hide-button').title = "Κρύψε την προσομοίωση";
+    document.getElementById('hide-button').title = "Κρύψε το εκκρεμές";
   }
 }
 
