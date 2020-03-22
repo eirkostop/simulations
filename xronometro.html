@@ -1,267 +1,311 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Χρονόμετρο</title>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-<link rel="stylesheet" href="https://physiquiz.gr/wp-content/uploads/fonts/BPtypewrite.css">
-	<style>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+    integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://physiquiz.gr/wp-content/uploads/fonts/BPtypewrite.css">
+  <style>
+    .half {
+      width: 50%;
+    }
 
-.half {
-    width:50%;
-  }
-@media only screen and (max-width:600px) {
-  /* For mobile phones: */
-  .half {
-    width:100%;
-  }}
-.slider {width:80%;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
+    @media only screen and (max-width:600px) {
 
-.slider:hover {
-    opacity: 1;
-}
+      /* For mobile phones: */
+      .half {
+        width: 100%;
+      }
+    }
 
-.slider::-moz-range-thumb {
-  background: #008982;
-  cursor: pointer;
-  width: 10px;
-  border: none;
-   left: 0;
-}
-.myCanvas-button {
-    padding: .4em 1em;
-    display: inline-block;
-    position: relative;
-    line-height: normal;
-    margin-right: .1em;
-    cursor: pointer;
-    vertical-align: middle;
-    text-align: center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    overflow: visible;
-}
- body{max-width:500px; margin-left:auto; margin-right:auto; color:#333;
-       font-family: BPTypewrite,sans-serif,'Arial Narrow';margin-top:auto;background:transparent; font-size:16px;}
-  
-</style></head>
+    .slider {
+      width: 80%;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+
+    .slider:hover {
+      opacity: 1;
+    }
+
+    .slider::-moz-range-thumb {
+      background: #008982;
+      cursor: pointer;
+      width: 10px;
+      border: none;
+      left: 0;
+    }
+
+    .myCanvas-button {
+      padding: .4em 1em;
+      display: inline-block;
+      position: relative;
+      line-height: normal;
+      margin-right: .1em;
+      cursor: pointer;
+      vertical-align: middle;
+      text-align: center;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      overflow: visible;
+    }
+
+    body {
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #333;
+      font-family: BPTypewrite, sans-serif, 'Arial Narrow';
+      margin-top: auto;
+      background: transparent;
+      font-size: 16px;
+    }
+  </style>
+</head>
 
 <body>
-<div style="background:white; border:#ccc 2px solid; border-radius:5px; text-align:center; max-width:500px; padding: 5px 0 5px 0;">
-  <div class="half" style=" float: left; text-align:center;"><span style="font-weight:bold"> Χρονόμετρο <hr style="height:2px;border-width:0;color:gray;background-color:#ccc"></span></div>
-  <div class="half" style=" float: left; text-align:center;" >  <span>&copy Περί ΦυσιQuiz</span><hr style="height:2px;border-width:0;background-color:#ccc"></div>
-  <div style="width:100%;">
-  <i class="fa fa-play myCanvas-button"  style="color:#333" onclick="startMotion();" title="Έναρξη"></i>
-  <i class="fa fa-pause myCanvas-button"  style="color:#333" onclick="stopMotion();" title="Παύση"></i>
-<i class="fa fa-redo myCanvas-button"  style="color:#333" onclick="restartMotion();" title="Επανεκκίνηση"></i>  
-</div>
-<div style="width:50%; float: left; text-align:center;">
-<canvas style="position:relative; background:white" id="a" >Please update your browser!</canvas>
-</div>
-<div style="width:50%; float: left; text-align:center;">
-<canvas style="position:relative; background:white" id="d" >Please update your browser!</canvas>
-</div>
- <div class= "half" style=" float: left; text-align:center;">
- <p><span style="font-weight:bold">Αναλογικό χρονόμετρο</span><br>
- Χρόνος t = <span id="analog"></span> s<br>
-Ακρίβεια: Δευτερολέπτου</p></div>
-<div class= "half"  style="float: left; text-align:center;">
-<p><span style="font-weight:bold">Ψηφιακό χρονόμετρο</span><br>
-Χρόνος t = <span id="digital" style="width:50px;display: inline-block"></span> s</p>
-Ακρίβεια:<br>
-<div style="text-align:left; padding-left:10px;" id="test">
-<input type="radio" name="akriveia" id="radio1"> Δευτερολέπτου<br>
-  <input type="radio" name="akriveia" id="radio2"> Δεκάτου Δευτ.<br>
-  <input type="radio" name="akriveia" id="radio3" checked> Εκατοστού Δευτ.<br>
-  <input type="radio" name="akriveia" id="radio4"> Χιλιοστού Δευτ.<br>
+  <div
+    style="background:white; border:#ccc 2px solid; border-radius:5px; text-align:center; max-width:500px; padding: 5px 0 5px 0;">
+    <div class="half" style=" float: left; text-align:center;"><span style="font-weight:bold"> Χρονόμετρο
+        <hr style="height:2px;border-width:0;color:gray;background-color:#ccc"></span></div>
+    <div class="half" style=" float: left; text-align:center;"> <span>&copy Περί ΦυσιQuiz</span>
+      <hr style="height:2px;border-width:0;background-color:#ccc">
+    </div>
+    <div style="width:100%;">
+      <i id="startStop" class="fa fa-play myCanvas-button" style="color:#333" onclick="startStopMotion()"
+        title="Έναρξη"></i>
+      <i class="fa fa-redo myCanvas-button" style="color:#333" onclick="restartMotion();" title="Επανεκκίνηση"></i>
+    </div>
+    <div style="width:50%; float: left; text-align:center;">
+      <canvas style="position:relative; background:white" id="a">Please update your browser!</canvas>
+    </div>
+    <div style="width:50%; float: left; text-align:center;">
+      <canvas style="position:relative; background:white" id="d">Please update your browser!</canvas>
+    </div>
+    <div class="half" style=" float: left; text-align:center;">
+      <p><span style="font-weight:bold">Αναλογικό χρονόμετρο</span><br>
+        Χρόνος t = <span id="analog"></span> s<br>
+        Ακρίβεια: Δευτερολέπτου</p>
+    </div>
+    <div class="half" style="float: left; text-align:center;">
+      <p><span style="font-weight:bold">Ψηφιακό χρονόμετρο</span><br>
+        Χρόνος t = <span id="digital" style="width:50px;display: inline-block"></span> s</p>
+      Ακρίβεια:<br>
+      <div style="text-align:left; padding-left:10px;" id="test">
+        <input type="radio" name="akriveia" id="radio1"> Δευτερολέπτου<br>
+        <input type="radio" name="akriveia" id="radio2"> Δεκάτου Δευτ.<br>
+        <input type="radio" name="akriveia" id="radio3" checked> Εκατοστού Δευτ.<br>
+        <input type="radio" name="akriveia" id="radio4"> Χιλιοστού Δευτ.<br>
+      </div>
+    </div>
+    &nbsp;
   </div>
-</div>
-&nbsp;
-</div>
+  <script>
+    const a = document.getElementById('a')
+    const actx = a.getContext("2d");
+    const d = document.getElementById('d')
+    const dctx = d.getContext("2d");
+    const cornerRadius = 5;
+    let t = 0;
+    let pointerX, pointerY, scale = 1;
+    let timer;
+    let start, pausetime = 0;
+    initialize();
 
-<script>
-var a=document.getElementById('a')
-var actx = a.getContext("2d");
-var d=document.getElementById('d')
-var dctx = d.getContext("2d");
-var x,y,t=0,tt=0;
-var pointerX,pointerY,scale=1;
-var timer;
-var cornerRadius = 5;
+    function initialize() {
+      window.addEventListener('resize', resizeCanvas, false);
+      resizeCanvas();
+    }
 
+    function resizeCanvas() {
+      if (window.innerWidth < 500) {
+        scale = window.innerWidth / 500;
+        a.width = 250 * scale - 2;
+        a.height = 250 * scale;
+        actx.scale(scale, scale);
+        scale = window.innerWidth / 500;
+        d.width = 250 * scale - 2;
+        d.height = 250 * scale;
+        dctx.scale(scale, scale);
+      }
+      if (window.innerWidth >= 500) {
+        a.width = 248;
+        a.height = 250;
+        d.width = 248;
+        d.height = 250;
+      }
+      drawClock(125, 125, t);
+      drawDigital(125, 125, t);
+    }
+    document.getElementById('test').onclick = function () {
+      drawClock(125, 125, t);
+      drawDigital(125, 125, t);
+    }
 
+    function drawClock(x0, y0, time) {
+      let t = time.toFixed(0);
+      let x = x0 + 90 * Math.cos(2 * Math.PI / 60 * t - Math.PI / 2);
+      let y = y0 + 90 * Math.sin(2 * Math.PI / 60 * t - Math.PI / 2);
+      let x1 = x0 + 90 * Math.cos(2 * Math.PI / 3600 * t - Math.PI / 2);
+      let y1 = y0 + 90 * Math.sin(2 * Math.PI / 3600 * t - Math.PI / 2);
+      //Draw clock
+      actx.beginPath();
+      actx.arc(x0, y0, 100, 0, 2 * Math.PI);
+      actx.lineWidth = 2;
+      actx.fillStyle = "#EDFAFF"
+      actx.fill();
+      //Draw tickmarks
+      for (var j = 0; j < 60; j++) {
+        actx.beginPath();
+        actx.moveTo(x0 + 100 * Math.cos(2 * Math.PI / 60 * j), y0 + 100 * Math.sin(2 * Math.PI / 60 * j));
+        actx.lineTo(x0 + 95 * Math.cos(2 * Math.PI / 60 * j), y0 + 95 * Math.sin(2 * Math.PI / 60 * j));
+        actx.lineWidth = 2;
+        actx.strokeStyle = "rgb(91, 179, 175)";
+        actx.stroke();
+      }
+      for (var i = 0; i < 13; i++) {
+        actx.beginPath();
+        actx.moveTo(x0 + 100 * Math.cos(2 * Math.PI / 12 * i), y0 + 100 * Math.sin(2 * Math.PI / 12 * i));
+        actx.lineTo(x0 + 80 * Math.cos(2 * Math.PI / 12 * i), y0 + 80 * Math.sin(2 * Math.PI / 12 * i));
+        actx.lineWidth = 2;
+        actx.strokeStyle = "rgb(91, 179, 175)";
+        actx.stroke();
+      }
+      //Draw indexes
+      actx.beginPath();
+      actx.moveTo(x0, y0);
+      actx.lineTo(x1, y1);
+      actx.lineWidth = 4;
+      actx.strokeStyle = "#008982"
+      actx.stroke();
+      actx.beginPath();
+      actx.arc(x1, y1, 2, 0, 2 * Math.PI);
+      actx.arc(x0, y0, 2, 0, 2 * Math.PI);
+      actx.fillStyle = "#008982"
+      actx.fill();
+      actx.beginPath();
+      actx.moveTo(x0, y0);
+      actx.lineTo(x, y);
+      actx.lineWidth = 3;
+      actx.strokeStyle = "#333"
+      actx.stroke();
+      actx.beginPath();
+      actx.arc(x, y, 2, 0, 2 * Math.PI);
+      actx.arc(x0, y0, 2, 0, 2 * Math.PI);
+      actx.fillStyle = "#333"
+      actx.fill();
+      //Show time below
+      document.getElementById("analog").innerHTML = t;
+    }
 
+    function drawDigital(x0, y0, time) {
+      //Draw clock
+      dctx.beginPath();
+      dctx.arc(x0, y0, 100, 0, 2 * Math.PI);
+      dctx.lineWidth = 2;
+      dctx.fillStyle = "#EDFAFF"
+      dctx.fill();
+      drawScreen(x0 - 80, y0 - 40, 160, 80, time);
+      //show time
+      const element = document.getElementById("digital");
+      if (document.getElementById('radio1').checked) element.innerHTML = time.toFixed(0);
+      else if (document.getElementById('radio2').checked) element.innerHTML = time.toFixed(1);
+      else if (document.getElementById('radio3').checked) element.innerHTML = time.toFixed(2);
+      else element.innerHTML = time.toFixed(3);
+    }
 
-			initialize();
- 
-			function initialize() {
-				window.addEventListener('resize', resizeCanvas, false);
-				resizeCanvas();
-			}
-			function resizeCanvas() {
-			if(window.innerWidth<500){
-			scale=window.innerWidth/500;a.width=250*scale-2;a.height=250*scale; actx.scale(scale,scale);
-			scale=window.innerWidth/500;d.width=250*scale-2;d.height=250*scale; dctx.scale(scale,scale);}
-			if(window.innerWidth>=500){
-			a.width = 248; a.height=250;
-			d.width = 248; d.height=250;}
-			drawClock(125,125);drawDigital(125,125);
-			}
+    function moveClock() {
+      t = new Date().getTime() / 1000 - start + pausetime;
+      dctx.clearRect(0, 0, 250, 250);
+      actx.clearRect(0, 0, 250, 250);
+      drawDigital(125, 125, t);
+      drawClock(125, 125, t);
+    }
 
-document.getElementById('test').onclick=function(){drawClock(125,125);drawDigital(125,125);}
+    function startStopMotion() {
+      const element = document.querySelector("#startStop");
+      if (element.classList.contains("fa-play")) {
+        element.classList.add("fa-pause");
+        element.classList.remove("fa-play");
+        element.setAttribute("title", "Παύση - Καταγραφή μέτρησης");
+        startMotion();
+      } else if (element.classList.contains("fa-pause")) {
+        element.classList.add("fa-play");
+        element.classList.remove("fa-pause");
+        element.setAttribute("title", "Συνέχιση");
+        stopMotion();
+      }
+    }
 
+    function startMotion() {
+      window.clearInterval(timer);
+      start = new Date().getTime() / 1000;
+      timer = window.setInterval(moveClock, 1000 / 60);
+    }
 
-function drawClock(x0,y0){
-x=x0+90*Math.cos(2*Math.PI/60*t-Math.PI/2);
-y=y0+90*Math.sin(2*Math.PI/60*t-Math.PI/2);
-x1=x0+90*Math.cos(2*Math.PI/3600*t-Math.PI/2);
-y1=y0+90*Math.sin(2*Math.PI/3600*t-Math.PI/2);
+    function stopMotion() {
+      pausetime = t;
+      window.clearInterval(timer);
+    }
 
-//Draw clock
-actx.beginPath();
-actx.arc(x0,y0,100,0,2*Math.PI);
-actx.lineWidth=2;
-actx.fillStyle="#EDFAFF"
-actx.fill();
-//Draw tickmarks
-for (var j=0;j<60;j++){
-actx.beginPath();
-actx.moveTo(x0+100*Math.cos(2*Math.PI/60*j),y0+100*Math.sin(2*Math.PI/60*j));
-actx.lineTo(x0+95*Math.cos(2*Math.PI/60*j),y0+95*Math.sin(2*Math.PI/60*j));
-actx.lineWidth=2;
-actx.strokeStyle="rgb(91, 179, 175)";
-actx.stroke();
-}
-for (var i=0;i<13;i++){
-actx.beginPath();
-actx.moveTo(x0+100*Math.cos(2*Math.PI/12*i),y0+100*Math.sin(2*Math.PI/12*i));
-actx.lineTo(x0+80*Math.cos(2*Math.PI/12*i),y0+80*Math.sin(2*Math.PI/12*i));
-actx.lineWidth=2;
-actx.strokeStyle="rgb(91, 179, 175)";
-actx.stroke();
-}
-//Draw indexes
-actx.beginPath();
-actx.moveTo(x0,y0);
-actx.lineTo(x1,y1);
-actx.lineWidth=4;
-actx.strokeStyle="#008982"
-actx.stroke();
-actx.beginPath();
-actx.arc(x1,y1,2,0,2*Math.PI);
-actx.arc(x0,y0,2,0,2*Math.PI);
-actx.fillStyle="#008982"
-actx.fill();
-
-actx.beginPath();
-actx.moveTo(x0,y0);
-actx.lineTo(x,y);
-actx.lineWidth=3;
-actx.strokeStyle="#333"
-actx.stroke();
-actx.beginPath();
-actx.arc(x,y,2,0,2*Math.PI);
-actx.arc(x0,y0,2,0,2*Math.PI);
-actx.fillStyle="#333"
-actx.fill();
-
-
-//Show time below
-document.getElementById("analog").innerHTML=t;
-}
-
-function drawDigital(x0,y0){
-
-//Draw clock
-dctx.beginPath();
-dctx.arc(x0,y0,100,0,2*Math.PI);
-dctx.lineWidth=2;
-dctx.fillStyle="#EDFAFF"
-dctx.fill();
-
-drawScreen(x0-80,y0-40,160,80);
-//show time
-if (document.getElementById('radio1').checked){document.getElementById("digital").innerHTML=tt.toFixed(0);}
-if (document.getElementById('radio2').checked){document.getElementById("digital").innerHTML=tt.toFixed(1);}
-if (document.getElementById('radio3').checked){document.getElementById("digital").innerHTML=tt.toFixed(2);}
-if (document.getElementById('radio4').checked){document.getElementById("digital").innerHTML=tt.toFixed(3);}
-}
-
-
-function moveClock(){
-  dctx.clearRect(0,0,250,250);
-  actx.clearRect(0,0,250,250);
-tt=new Date().getTime()/1000-start+pauseTime;
-t=tt.toFixed(0);
-drawDigital(125,125);drawClock(125,125);
-
-	}
-var start,pauseTime=0;
-	function startMotion(){
-start = new Date().getTime()/1000;
-  window.clearInterval(timer);
-timer=window.setInterval(moveClock,1000/60);}
-  function stopMotion(){
-  pauseTime=tt;
-  window.clearInterval(timer);
-}
-  function restartMotion(){
-   x=50;y=100;x1=50;y1=100;
-	t=0;tt=0;
-		drawClock(125,125);	drawDigital(125,125);
-  window.clearInterval(timer);
-   pauseTime=0;
- }
-//Draw screen
-function drawScreen(rectX,rectY,rectWidth,rectHeight){
-dctx.beginPath();
-	  dctx.moveTo(rectX, rectY+cornerRadius);
-	  dctx.arcTo(rectX , rectY, rectX + cornerRadius, rectY, cornerRadius);
-	  dctx.lineTo(rectX+rectWidth-cornerRadius,rectY);
-	  dctx.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + cornerRadius, cornerRadius);
-	  dctx.lineTo(rectX+rectWidth,rectY+rectHeight-cornerRadius);
-	  dctx.arcTo(rectX + rectWidth, rectY+rectHeight, rectX + rectWidth-cornerRadius, rectY + rectHeight, cornerRadius);
-	  	  dctx.lineTo(rectX + cornerRadius, rectY+rectHeight);
-	  dctx.arcTo(rectX, rectY+rectHeight, rectX , rectY +rectHeight-cornerRadius, cornerRadius);
-	  dctx.lineTo(rectX,rectY+cornerRadius);
-	  dctx.closePath();
-	 
-	  var grd=dctx.createLinearGradient(rectX,rectY,rectX+rectWidth,rectY+rectHeight);
-	  grd.addColorStop(0,"#f4f4f4");
-	grd.addColorStop(1,"#fff");
-	 dctx.fillStyle=grd;
-	 dctx.fill();
-	 	 dctx.strokeStyle="#59A8A4";
-	 dctx.stroke();
-	 //Draw Digits
-	 dctx.beginPath();
-	 dctx.fillStyle="#333";
-	 dctx.font="40px BPTypeWrite";
-if (document.getElementById('radio1').checked){
-	dctx.fillText(tt.toFixed(0)+"s",rectX+10,rectY+rectHeight/2+20);
-}
-if (document.getElementById('radio2').checked){
-	dctx.fillText(tt.toFixed(1)+"s",rectX+10,rectY+rectHeight/2+20);
-}
-if (document.getElementById('radio3').checked){
-if(tt>=100){dctx.font="30px BPTypeWrite";}
-	dctx.fillText(tt.toFixed(2)+"s",rectX+10,rectY+rectHeight/2+20);}
-if (document.getElementById('radio4').checked){
-if(tt>=10){dctx.font="30px BPTypeWrite";}
-	dctx.fillText(tt.toFixed(3)+"s",rectX+10,rectY+rectHeight/2+20);
-	}
-	 dctx.fill();
-
-	}
-
-</script>
+    function restartMotion() {
+      t = 0;
+      drawClock(125, 125, t);
+      drawDigital(125, 125, t);
+      window.clearInterval(timer);
+      pausetime = 0;
+    }
+    //Draw screen
+    function drawScreen(rectX, rectY, rectWidth, rectHeight, time) {
+      dctx.beginPath();
+      dctx.moveTo(rectX, rectY + cornerRadius);
+      dctx.arcTo(rectX, rectY, rectX + cornerRadius, rectY, cornerRadius);
+      dctx.lineTo(rectX + rectWidth - cornerRadius, rectY);
+      dctx.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + cornerRadius, cornerRadius);
+      dctx.lineTo(rectX + rectWidth, rectY + rectHeight - cornerRadius);
+      dctx.arcTo(rectX + rectWidth, rectY + rectHeight, rectX + rectWidth - cornerRadius, rectY + rectHeight,
+        cornerRadius);
+      dctx.lineTo(rectX + cornerRadius, rectY + rectHeight);
+      dctx.arcTo(rectX, rectY + rectHeight, rectX, rectY + rectHeight - cornerRadius, cornerRadius);
+      dctx.lineTo(rectX, rectY + cornerRadius);
+      dctx.closePath();
+      var grd = dctx.createLinearGradient(rectX, rectY, rectX + rectWidth, rectY + rectHeight);
+      grd.addColorStop(0, "#f4f4f4");
+      grd.addColorStop(1, "#fff");
+      dctx.fillStyle = grd;
+      dctx.fill();
+      dctx.strokeStyle = "#59A8A4";
+      dctx.stroke();
+      //Draw Digits
+      dctx.beginPath();
+      dctx.fillStyle = "#333";
+      dctx.font = "40px BPTypeWrite";
+      if (document.getElementById('radio1').checked) {
+        dctx.fillText(t.toFixed(0) + "s", rectX + 10, rectY + rectHeight / 2 + 20);
+      }
+      if (document.getElementById('radio2').checked) {
+        dctx.fillText(time.toFixed(1) + "s", rectX + 10, rectY + rectHeight / 2 + 20);
+      }
+      if (document.getElementById('radio3').checked) {
+        if (time >= 100) {
+          dctx.font = "30px BPTypeWrite";
+        }
+        dctx.fillText(time.toFixed(2) + "s", rectX + 10, rectY + rectHeight / 2 + 20);
+      }
+      if (document.getElementById('radio4').checked) {
+        if (time >= 10) {
+          dctx.font = "30px BPTypeWrite";
+        }
+        dctx.fillText(time.toFixed(3) + "s", rectX + 10, rectY + rectHeight / 2 + 20);
+      }
+      dctx.fill();
+    }
+  </script>
 </body>
+
 </html>

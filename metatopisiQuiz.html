@@ -1,325 +1,382 @@
-<!DOCTYPE html><html><head>
-<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <title>Μετατόπιση Quiz</title> 
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<title>Quiz στη Μετατόπιση</title>
 	<link rel="stylesheet" href="https://physiquiz.gr/wp-content/uploads/fonts/BPtypewrite.css">
 	<style>
-.half {
-    width:50%;
-  }
-@media only screen and (max-width:300px) {
-  /* For mobile phones: */
-  .half {
-    width:100%;
-  }}
-  body{max-width:500px; margin-left:auto; margin-right:auto; color:#333;
-        background-color:#d0d0d0; font-family: BPTypewrite,sans-serif,'Arial Narrow';margin-top:auto;background:transparent; font-size:16px;}
-  </style>
+		.half {
+			width: 50%;
+		}
+
+		@media only screen and (max-width:300px) {
+
+			/* For mobile phones: */
+			.half {
+				width: 100%;
+			}
+		}
+
+		body {
+			max-width: 500px;
+			margin-left: auto;
+			margin-right: auto;
+			color: #333;
+			background-color: #d0d0d0;
+			font-family: BPTypewrite, sans-serif, 'Arial Narrow';
+			margin-top: auto;
+			background: transparent;
+			font-size: 16px;
+		}
+	</style>
 </head>
 
 <body>
+	<div
+		style="background:white; border:#ccc 2px solid; border-radius:5px; text-align:center; max-width:500px; padding: 5px 0 5px 0;">
+		<div class="half" style=" float: left; text-align:center;"><span style="font-weight:bold"> Quiz Μετατόπισης
+				<hr style="height:2px;border-width:0;color:gray;background-color:#ccc"></span></div>
+		<div class="half" style=" float: left; text-align:center;"> <span>&copy Περί ΦυσιQuiz</span>
+			<hr style="height:2px;border-width:0;color:gray;background-color:#ccc">
+		</div>
+		<canvas style="position:relative; " id="theCanvas" width="100%-4px" height="200">Please update your
+			browser!</canvas>
+		<p><span id="result"></span>
+			<span id="instructions">Μετατόπισε τη γόμα κατά Δx = 3cm.</span></p>
+		<span id="grade"></span><a href="" id="redo" style="color:#333;text-decoration:none;display:none; ">&nbsp
+			&#x21BB; </button>
+	</div>
+	<script>
+		const theCanvas = document.getElementById('theCanvas');
+		const theContext = theCanvas.getContext('2d');
+		const rectWidth = 40;
+		const rectHeight = 100;
+		const cornerRadius = 5;
+		const rectSide = 10;
+		const rectY = 10;
+		let pointerX, pointerY;
+		let rubberX = 230;
+		let rubberX0 = rubberX;
+		let rubberX1 = rubberX;
+		let scale = 1;
+		let x = (rubberX - 250 + rectWidth / 2) / 45;
+		let count = 0;
+		let right = 0;
+		let positions = [3, Math.floor(Math.random() * 11) - 5, Math.floor(Math.random() * 11) - 5];
 
-<div style="background:white; border:#ccc 2px solid; border-radius:5px; text-align:center; max-width:500px; padding: 5px 0 5px 0;">
-  <div class="half" style=" float: left; text-align:center;"><span style="font-weight:bold"> Μετατόπιση Quiz<hr style="height:2px;border-width:0;color:gray;background-color:#ccc"></span></div>
-  <div class="half" style=" float: left; text-align:center;" >  <span>&copy Περί ΦυσιQuiz</span><hr style="height:2px;border-width:0;color:gray;background-color:#ccc"></div>
-
-<canvas style="position:relative; " id="theCanvas" width="100%-4px" height="200" >Please update your browser!</canvas>
-
-<p><span id="right" style="color:#008982"></span><span id="wrong" style="color:#B05D40"></span>
-<span id="instructions"></span></p>
-<span id="grade"></span><a href="" id="redo" onclick="redo()" style="color:#333;text-decoration:none;display:inline-block; ">&nbsp   &#x21BB; </button>
-</div>
-
-<script>
-    var theCanvas = document.getElementById('theCanvas');
-    var theContext = theCanvas.getContext('2d');
-	var theCanvas = document.getElementById('theCanvas');
-    var theContext = theCanvas.getContext('2d');
-var pointerX, pointerY;
-	 var rectWidth = 40;
-	 var rectHeight = 100;
-      var cornerRadius = 5;
-	  var rectSide=10;
-      var rubberX = 230;
-	  
-	  var rubberX0 = 230;
-	  var rubberX1 = 230;
-      var rectY = 10;
-      var cornerRadius = 5;
-	  var rectSide=10;
-	  var scale=1;
-var x=0;
-
-var count=0;right=0;
-	x=(rubberX-250+rectWidth/2)/45;
-    
-	
-	
-function initialize() {
-				window.addEventListener('resize', resizeCanvas, false);
-				resizeCanvas();
+		initialize = () => {
+			window.addEventListener('resize', resizeCanvas, false);
+			resizeCanvas();
+		}
+		resizeCanvas = () => {
+			if (window.innerWidth < 500) {
+				scale = window.innerWidth / 500;
+				theCanvas.width = 500 * scale - 4;
+				theCanvas.height = 200 * scale;
+				theContext.scale(scale, scale);
 			}
-			function resizeCanvas() {
-			if(window.innerWidth<500){
-			scale=window.innerWidth/500;theCanvas.width=500*scale-4;theCanvas.height=200*scale; theContext.scale(scale,scale);}
-			if(window.innerWidth>=500){theCanvas.width = 496; theCanvas.height=200;scale=1;}
-				drawRuler(8,130,480,60);
-	 drawRubber(rubberX);
+			if (window.innerWidth >= 500) {
+				theCanvas.width = 496;
+				theCanvas.height = 200;
+				scale = 1;
 			}
-	initialize();
-	
+			drawRuler(8, 130, 480, 60);
+			drawRubber(rubberX);
+		}
 
-	drawRuler(8,130,480,60);
-	 drawRubber(rubberX); 
-	 
+		mouseDown = (e) => {
+			e.preventDefault();
+			pointerX = (e.pageX - theCanvas.offsetLeft) / scale;
+			pointerY = (e.pageY - theCanvas.offsetTop) / scale;
+			if (pointerX >= rubberX && pointerX <= (rubberX + rectWidth)) {
+				theCanvas.style.cursor = 'grabbing';
+				theCanvas.addEventListener('mousemove', dragRubber, false);
+			}
+			theCanvas.addEventListener('mousemove', () => {
+				theCanvas.style.cursor = 'grabbing'
+			}, false);
+			rubberX0 = rubberX;
+		}
 
-var positions = [3];
-positions.push(Math.floor(Math.random()*11)-5);
-positions.push(Math.floor(Math.random()*11)-5);
+		dragRubber = (e) => {
+			e.preventDefault();
+			pointerX = (e.pageX - theCanvas.offsetLeft) / scale;
+			pointerY = (e.pageY - theCanvas.offsetTop) / scale;
+			if (pointerX >= 25 && pointerX <= 475) {
+				theContext.clearRect(0, 0, 500, 200);
+				drawRuler(8, 130, 480, 60);
+				rubberX = pointerX - rectWidth / 2;
+				drawRubber(rubberX);
+				canvas_arrow(rubberX0 + rectWidth / 2, 130, rubberX + rectWidth / 2, 130);
+				x = (rubberX - 250 + rectWidth / 2) / 45;
+			}
+			if (pointerX < 25) {
+				rubberX = 25 - rectWidth / 2
+			}
+			if (pointerX > 475) {
+				rubberX = 475 - rectWidth / 2
+			}
+		}
 
+		mouseUp = (e) => {
+			e.preventDefault();
+			theCanvas.removeEventListener('mousemove', dragRubber, false);
+			theCanvas.removeEventListener('mousemove', function () {
+				theCanvas.style.cursor = 'grabbing'
+			}, false);
+			theContext.clearRect(0, 0, 500, 200);
+			rubberX = 45 * Math.round(x) + 250 - rectWidth / 2;
+			drawRuler(8, 130, 480, 60);
+			drawRubber(rubberX);
+			canvas_arrow(rubberX0 + rectWidth / 2, 130, rubberX + rectWidth / 2, 130);
+			rubberX1 = rubberX;
+			theCanvas.style.cursor = 'default';
+			theCanvas.addEventListener('mousemove', function () {
+				if (pointerX >= rubberX && pointerX <= (rubberX + rectWidth) && pointerY >= 50 && pointerY <=
+					(50 +
+						rectHeight)) {
+					theCanvas.style.cursor = 'pointer';
+				}
+			}, false);
+			theCanvas.addEventListener('mousemove', function () {
+				if (pointerX < rubberX || pointerX > (rubberX + rectWidth) || pointerY < 50 || pointerY > (
+						50 +
+						rectHeight)) {
+					theCanvas.style.cursor = 'default';
+				}
+			}, false);
+		}
 
-document.getElementById('instructions').innerHTML="Μετατόπισε τη γόμα κατά Δx="+positions[0]+"cm.";
- document.getElementById("redo").style.display = "none";
+		write = () => {
+			if (positions[count] == (Math.round(x) - Math.round((rubberX0 - 250 + rectWidth / 2) / 45))) {
+				document.getElementById('result').innerHTML = "Σωστό!";
+				document.getElementById('result').style.color = "#008982";
+				right++;
+			} else {
+				document.getElementById('result').innerHTML = "Λάθος.";
+				document.getElementById('result').style.color = "#B05D40";
+			}
+			count++;
+			document.getElementById('grade').innerHTML = "Βαθμολογία:     " + right + "/" + count + "     (" + Math
+				.round(
+					right / count * 100) + "%)";
+			if (Math.round(x) + positions[count] > 5 && Math.round(x) + positions[count] <= 10) {
+				positions[count] = Math.round(x) + positions[count] - 10
+			}
+			if (Math.round(x) + positions[count] > 10) {
+				positions[count] = Math.round(x) + positions[count] - 15
+			}
+			if (Math.round(x) + positions[count] < -5 && Math.round(x) + positions[count] >= -10) {
+				positions[count] = Math.round(x) + positions[count] + 10
+			}
+			if (Math.round(x) + positions[count] < -10) {
+				positions[count] = Math.round(x) + positions[count] + 15
+			}
+			document.getElementById('instructions').innerHTML = "Τώρα μετατόπισέ τη κατά   Δx=" + positions[count] +
+				"cm";
+			document.getElementById('redo').innerHTML = "&nbsp; &#x21BB;";
+			positions.push(Math.floor(Math.random() * 21) - 10);
+			document.getElementById("redo").style.display = "inline-block";
+			document.getElementById("redo").addEventListener("click", redo);
+		}
 
-	
-function mouseDown(e){
-e.preventDefault();	
-pointerX = (e.pageX-theCanvas.offsetLeft)/scale;
- pointerY = (e.pageY-theCanvas.offsetTop)/scale;
- if (pointerX>=rubberX&&pointerX<=(rubberX+rectWidth)){
-theCanvas.style.cursor = 'grabbing';
-theCanvas.addEventListener('mousemove', dragRubber, false);}
-theCanvas.addEventListener('mousemove', function(){theCanvas.style.cursor = 'grabbing'}, false);
-rubberX0=rubberX;
-}
+		redo = () => {
+			drawRubber(230);
+			document.getElementById('instructions').innerHTML = "Μετατόπισε τη γόμα κατά " + positions[count] + "cm.";
+			document.getElementById('redo').innerHTML = "&nbsp;";
+			document.getElementById('result').innerHTML = "&nbsp;";
+			document.getElementById('grade').innerHTML = "&nbsp;";
+			count = 0;
+			right = 0;
+		}
 
-function dragRubber(e){
-e.preventDefault();	
-pointerX = (e.pageX-theCanvas.offsetLeft)/scale;
- pointerY = (e.pageY-theCanvas.offsetTop)/scale;
-if(pointerX>=25&&pointerX<=475){theContext.clearRect(0,0,500,200);
-drawRuler(8,130,480,60);
-rubberX=pointerX-rectWidth/2;
-drawRubber(rubberX);
-canvas_arrow( rubberX0+rectWidth/2, 130, rubberX+rectWidth/2, 130);
-x=(rubberX-250+rectWidth/2)/45;
+		touchStart = (e) => {
+			e.preventDefault();
+			pointerX = (e.targetTouches[0].pageX - theCanvas.offsetLeft) / scale;
+			pointerY = (e.targetTouches[0].pageY - theCanvas.offsetTop) / scale;
+			theContext.clearRect(0, 0, 500, 200);
+			drawRuler(8, 130, 480, 60);
+			rubberX = pointerX - rectWidth / 2;
+			drawRubber(rubberX);
+			canvas_arrow(rubberX0 + rectWidth / 2, 130, rubberX + rectWidth / 2, 130);
+			x = (rubberX - 250 + rectWidth / 2) / 45;
+			rubberX0 = Math.round(x) * 45 + 250 - rectWidth / 2;
+		}
 
-}
-if(pointerX<25){rubberX=25-rectWidth/2}
-if(pointerX>475){rubberX=475-rectWidth/2}
-}
+		touchMove = (e) => {
+			e.preventDefault();
+			pointerX = (e.targetTouches[0].pageX - theCanvas.offsetLeft) / scale;
+			pointerY = (e.targetTouches[0].pageY - theCanvas.offsetTop) / scale;
+			theContext.clearRect(0, 0, 500, 200);
+			drawRuler(8, 130, 480, 60);
+			rubberX = pointerX - rectWidth / 2;
+			drawRubber(rubberX);
+			canvas_arrow(rubberX0 + rectWidth / 2, 130, rubberX + rectWidth / 2, 130);
+			x = (rubberX - 250 + rectWidth / 2) / 45;
+		}
 
-function mouseUp(e) {
-e.preventDefault();	
-theCanvas.removeEventListener('mousemove', dragRubber, false);
-theCanvas.removeEventListener('mousemove', function(){theCanvas.style.cursor = 'grabbing'}, false);
-theContext.clearRect(0,0,500,200);
-rubberX=45*Math.round(x)+250-rectWidth/2;
-drawRuler(8,130,480,60);
- drawRubber(rubberX); 
- canvas_arrow( rubberX0+rectWidth/2, 130, rubberX+rectWidth/2, 130);
- rubberX1=rubberX;
-theCanvas.style.cursor = 'default';
-theCanvas.addEventListener('mousemove',function(){if (pointerX>=rubberX&&pointerX<=(rubberX+rectWidth)&&pointerY>=50&&pointerY<=(50+rectHeight)){
-theCanvas.style.cursor = 'pointer';	}}, false);
-theCanvas.addEventListener('mousemove',function(){if (pointerX<rubberX||pointerX>(rubberX+rectWidth)||pointerY<50||pointerY>(50+rectHeight)){
-theCanvas.style.cursor = 'default';	}}, false);
- }
- 
+		touchEnd = (e) => {
+			e.preventDefault();
+			theContext.clearRect(0, 0, 500, 200);
+			rubberX = 45 * Math.round(x) + 250 - rectWidth / 2;
+			drawRuler(8, 130, 480, 60);
+			drawRubber(rubberX);
+			canvas_arrow(rubberX0 + rectWidth / 2, 130, rubberX + rectWidth / 2, 130);
+			rubberX1 = rubberX;
+			write();
+		}
 
- function write(){
+		drawRubber = (rectX) => {
+			theContext.clearRect(0, rectY - 1, 500, rectY + rectHeight / 2 + rectSide + 1);
+			theContext.beginPath();
+			theContext.moveTo(rectX, rectY + rectHeight / 3);
+			theContext.lineTo(rectX, rectY + cornerRadius);
+			theContext.arcTo(rectX, rectY, rectX + cornerRadius, rectY, cornerRadius);
+			theContext.lineTo(rectX + rectWidth - cornerRadius, rectY);
+			theContext.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + cornerRadius, cornerRadius);
+			theContext.lineTo(rectX + rectWidth, rectY + rectHeight / 3);
+			theContext.closePath();
+			theContext.fillStyle = "#829CB7"
+			theContext.fill();
+			theContext.beginPath();
+			theContext.moveTo(rectX + rectWidth, rectY + rectHeight / 3);
+			theContext.lineTo(rectX + rectWidth, rectY + rectHeight + rectSide - cornerRadius);
+			theContext.arcTo(rectX + rectWidth, rectY + rectHeight + rectSide, rectX + rectWidth - cornerRadius,
+				rectY +
+				rectHeight + rectSide, cornerRadius);
+			theContext.lineTo(rectX + cornerRadius, rectY + rectHeight + rectSide);
+			theContext.arcTo(rectX, rectY + rectHeight + rectSide, rectX, rectY + rectHeight + rectSide -
+				cornerRadius,
+				cornerRadius);
+			theContext.lineTo(rectX, rectY + rectHeight / 3);
+			theContext.closePath();
+			theContext.fillStyle = "#B05D40";
+			theContext.fill();
+			theContext.beginPath();
+			theContext.moveTo(rectX + rectWidth, rectY + rectHeight + rectSide / 2 - cornerRadius);
+			theContext.arcTo(rectX + rectWidth, rectY + rectHeight + rectSide / 2, rectX + rectWidth - cornerRadius,
+				rectY +
+				rectHeight + rectSide / 2, cornerRadius);
+			theContext.lineTo(rectX + cornerRadius, rectY + rectHeight + rectSide / 2);
+			theContext.arcTo(rectX, rectY + rectHeight + rectSide / 2, rectX, rectY + rectHeight + rectSide / 2 -
+				cornerRadius, cornerRadius);
+			theContext.strokeStyle = "white";
+			theContext.stroke();
+			theContext.beginPath();
+			theContext.moveTo(rectX + rectWidth, rectY + rectHeight / 3);
+			theContext.lineTo(rectX + rectWidth, rectY + rectHeight - cornerRadius);
+			theContext.arcTo(rectX + rectWidth, rectY + rectHeight, rectX + rectWidth - cornerRadius, rectY +
+				rectHeight,
+				cornerRadius);
+			theContext.lineTo(rectX + cornerRadius, rectY + rectHeight);
+			theContext.arcTo(rectX, rectY + rectHeight, rectX, rectY + rectHeight - cornerRadius, cornerRadius);
+			theContext.lineTo(rectX, rectY + rectHeight / 3);
+			theContext.closePath();
+			theContext.fillStyle = "#D36B46";
+			theContext.fill();
+		}
 
-if(positions[count]==(Math.round(x)-Math.round((rubberX0-250+rectWidth/2)/45))){
- document.getElementById('right').innerHTML="Σωστό!";
-document.getElementById('wrong').innerHTML="&nbsp;";
- right++;}
- 
-  else{
-document.getElementById('wrong').innerHTML="Λάθος.";
-document.getElementById('right').innerHTML="&nbsp;";
- }
- count++;
+		drawRuler = (rectX, rectY, rectWidth, rectHeight) => {
+			theContext.clearRect(0, rectY - 1, 500, rectY + rectHeight / 2 + rectSide + 1);
+			theContext.beginPath();
+			theContext.moveTo(rectX, rectY + rectHeight / 3);
+			theContext.lineTo(rectX, rectY + cornerRadius);
+			theContext.arcTo(rectX, rectY, rectX + cornerRadius, rectY, cornerRadius);
+			theContext.lineTo(rectX + rectWidth - cornerRadius, rectY);
+			theContext.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + cornerRadius, cornerRadius);
+			theContext.lineTo(rectX + rectWidth, rectY + rectHeight / 3);
+			theContext.closePath();
+			theContext.fillStyle = "#5BB3AF"
+			theContext.fill();
+			theContext.beginPath();
+			theContext.moveTo(rectX + rectWidth, rectY + rectHeight / 3);
+			theContext.lineTo(rectX + rectWidth, rectY + rectHeight + rectSide - cornerRadius);
+			theContext.arcTo(rectX + rectWidth, rectY + rectHeight + rectSide, rectX + rectWidth - cornerRadius,
+				rectY +
+				rectHeight + rectSide, cornerRadius);
+			theContext.lineTo(rectX + cornerRadius, rectY + rectHeight + rectSide);
+			theContext.arcTo(rectX, rectY + rectHeight + rectSide, rectX, rectY + rectHeight + rectSide -
+				cornerRadius,
+				cornerRadius);
+			theContext.lineTo(rectX, rectY + rectHeight / 3);
+			theContext.closePath();
+			var grd = theContext.createLinearGradient(rectX, rectY, rectX + rectWidth, rectHeight);
+			grd.addColorStop(0, "#5BB3AF");
+			grd.addColorStop(1, "#008982");
+			theContext.fillStyle = grd;
+			theContext.fill();
+			//Draw gridlines
+			theContext.beginPath();
+			for (j = 1; j < 12; j++) {
+				theContext.moveTo(45 * j - 20, 130);
+				theContext.lineTo(45 * j - 20, 150);
+				theContext.font = "13px Arial";
+				theContext.fillStyle = "white";
+				theContext.lineWidth = 1.5;
+				theContext.fillText(j - 6, j * 45 - 25, 170);
+			}
+			theContext.strokeStyle = "white";
+			theContext.stroke();
+		}
 
-document.getElementById('grade').innerHTML="Βαθμολογία:     "+right+"/"+count+"     ("+Math.round(right/count*100)+"%)";
-  if(Math.round(x)+positions[count]>5&&Math.round(x)+positions[count]<=10){positions[count]=Math.round(x)+positions[count]-10}
-  if(Math.round(x)+positions[count]>10){positions[count]=Math.round(x)+positions[count]-15}
-  if(Math.round(x)+positions[count]<-5&&Math.round(x)+positions[count]>=-10){positions[count]=Math.round(x)+positions[count]+10}
-  if(Math.round(x)+positions[count]<-10){positions[count]=Math.round(x)+positions[count]+15}
- document.getElementById('instructions').innerHTML="Τώρα μετατόπισέ τη κατά   Δx="+positions[count]+"cm";
-  document.getElementById('redo').innerHTML="&nbsp; &#x21BB;";
- positions.push(Math.floor(Math.random()*21)-10);
- 
- document.getElementById("redo").style.display = "inline-block";
- document.getElementById("redo").addEventListener("click", redo);
- }
+		canvas_arrow = (fromx, fromy, tox, toy) => {
+			var headlen = 10; // length of head in pixels
+			var angle = Math.atan2(toy - fromy, tox - fromx);
+			if (fromx != tox || fromy != toy) {
+				theContext.beginPath();
+				theContext.arc(fromx, fromy, 2, 0, 2 * Math.PI);
+				theContext.fillStyle = "#333";
+				theContext.fill();
+				theContext.moveTo(fromx, fromy);
+				theContext.lineTo(tox, toy);
+				theContext.lineWidth = 2;
+				theContext.strokeStyle = "#333";
+				theContext.stroke();
+				theContext.moveTo(tox, toy);
+				theContext.lineTo(tox - headlen * Math.cos(angle - Math.PI / 9), toy - headlen * Math.sin(angle - Math
+					.PI /
+					9));
+				theContext.lineTo(tox - headlen * Math.cos(angle + Math.PI / 9), toy - headlen * Math.sin(angle + Math
+					.PI /
+					9));
+				theContext.closePath();
+				theContext.fillStyle = "#333";
+				theContext.fill();
+			}
+		}
 
- function redo(){
-drawRubber(230);
- document.getElementById('instructions').innerHTML="Μετατόπισε τη γόμα κατά "+positions[count]+"cm.";
- document.getElementById('redo').innerHTML="&nbsp;";
- document.getElementById('right').innerHTML="&nbsp;";
- document.getElementById('wrong').innerHTML="&nbsp;";
- document.getElementById('grade').innerHTML="&nbsp;";
- count=0;right=0;
- }
- 
-	function touchStart(e) {
-	e.preventDefault();	
-pointerX = (e.targetTouches[0].pageX-theCanvas.offsetLeft)/scale;
- pointerY = (e.targetTouches[0].pageY-theCanvas.offsetTop)/scale;
- theContext.clearRect(0,0,500,200);
-drawRuler(8,130,480,60);
-rubberX=pointerX-rectWidth/2;
-drawRubber(rubberX);
-canvas_arrow( rubberX0+rectWidth/2, 130, rubberX+rectWidth/2, 130);
-x=(rubberX-250+rectWidth/2)/45;
-rubberX0=Math.round(x)*45+250-rectWidth/2;
-}
-	function touchMove(e) {
-	e.preventDefault();	
-pointerX = (e.targetTouches[0].pageX-theCanvas.offsetLeft)/scale;
- pointerY = (e.targetTouches[0].pageY-theCanvas.offsetTop)/scale;
- theContext.clearRect(0,0,500,200);
-drawRuler(8,130,480,60);
-rubberX=pointerX-rectWidth/2;
-drawRubber(rubberX);
-canvas_arrow( rubberX0+rectWidth/2, 130, rubberX+rectWidth/2, 130);
-x=(rubberX-250+rectWidth/2)/45;
-}
+		showCoords = (e) => {
+			pointerX = (e.pageX - theCanvas.offsetLeft) / scale;
+			pointerY = (e.pageY - theCanvas.offsetTop) / scale;
+			var coords = "X coords: " + pointerX + ", Y coords: " + pointerY + ", <br>Θέση x= " + Math.round(x) +
+				", rubberX= " + rubberX + ", rubberX0= " + rubberX0 +
+				",<br>scale= " + scale + ".    " + positions;
+			document.getElementById("demo").innerHTML = coords;
+		}
+		theCanvas.addEventListener('mousedown', mouseDown, false);
+		theCanvas.addEventListener('mouseup', mouseUp, false);
+		theCanvas.addEventListener('mouseup', write, false);
+		document.addEventListener('mouseup', mouseUp, false); // button release could occur outside canvas
+		theCanvas.addEventListener('touchstart', touchStart, false);
+		theCanvas.addEventListener('touchmove', touchMove, false);
+		theCanvas.addEventListener('touchend', touchEnd, false);
+		theCanvas.addEventListener('mousemove', function () {
+			if (pointerX >= rubberX && pointerX <= (rubberX + rectWidth) && pointerY >= 50 && pointerY <= (
+					50 +
+					rectHeight)) {
+				theCanvas.style.cursor = 'pointer';
+			}
+		}, false);
+		theCanvas.addEventListener('mousemove', function () {
+			if (pointerX < rubberX || pointerX > (rubberX + rectWidth) || pointerY < 50 || pointerY > (50 +
+					rectHeight)) {
+				theCanvas.style.cursor = 'default';
+			}
+		}, false);
+		initialize();
+	</script>
+</body>
 
-function touchEnd(e) {
-		e.preventDefault();	
-theContext.clearRect(0,0,500,200);
-rubberX=45*Math.round(x)+250-rectWidth/2;
-drawRuler(8,130,480,60);
- drawRubber(rubberX); 
- canvas_arrow( rubberX0+rectWidth/2, 130, rubberX+rectWidth/2, 130);
- rubberX1=rubberX;
- write();
-	}
-
-function drawRubber(rectX){
-theContext.clearRect(0,rectY-1,500,rectY+rectHeight/2+rectSide+1);
-theContext.beginPath();
-	  theContext.moveTo(rectX,rectY+rectHeight/3);
-	  theContext.lineTo(rectX, rectY+cornerRadius);
-	  theContext.arcTo(rectX , rectY, rectX + cornerRadius, rectY, cornerRadius);
-	  theContext.lineTo(rectX+rectWidth-cornerRadius,rectY);
-	  theContext.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + cornerRadius, cornerRadius);
-	  theContext.lineTo(rectX+rectWidth,rectY+rectHeight/3);
-	  theContext.closePath();
-	  theContext.fillStyle="#829CB7"
-	  theContext.fill();
-	  theContext.beginPath();
-	  theContext.moveTo(rectX+rectWidth,rectY+rectHeight/3);
-      theContext.lineTo(rectX + rectWidth, rectY + rectHeight+rectSide-cornerRadius);
-	  theContext.arcTo(rectX + rectWidth, rectY+rectHeight+ rectSide, rectX + rectWidth-cornerRadius, rectY + rectHeight+rectSide, cornerRadius);
-	  theContext.lineTo(rectX + cornerRadius, rectY+rectHeight+rectSide);
-	  theContext.arcTo(rectX, rectY+rectHeight+rectSide, rectX , rectY +rectHeight+rectSide-cornerRadius, cornerRadius);
-	  theContext.lineTo(rectX,rectY+rectHeight/3);
-	  theContext.closePath();
-	  theContext.fillStyle="#B05D40";
-	  theContext.fill();
-	  
-	  	  theContext.beginPath();
-      theContext.moveTo(rectX + rectWidth, rectY + rectHeight+rectSide/2-cornerRadius);
-	  theContext.arcTo(rectX + rectWidth, rectY+rectHeight+ rectSide/2, rectX + rectWidth-cornerRadius, rectY + rectHeight+rectSide/2, cornerRadius);
-	  theContext.lineTo(rectX + cornerRadius, rectY+rectHeight+rectSide/2);
-	  theContext.arcTo(rectX, rectY+rectHeight+rectSide/2, rectX , rectY +rectHeight+rectSide/2-cornerRadius, cornerRadius);
-	  theContext.strokeStyle="white";
-	  theContext.stroke();
-	  
-	  theContext.beginPath();
-	  theContext.moveTo(rectX+rectWidth,rectY+rectHeight/3);
-      theContext.lineTo(rectX + rectWidth, rectY + rectHeight-cornerRadius);
-	  theContext.arcTo(rectX + rectWidth, rectY+rectHeight, rectX + rectWidth-cornerRadius, rectY +rectHeight, cornerRadius);
-	  theContext.lineTo(rectX + cornerRadius, rectY+rectHeight);
-	  theContext.arcTo(rectX, rectY+rectHeight, rectX , rectY +rectHeight-cornerRadius, cornerRadius);
-	  theContext.lineTo(rectX,rectY+rectHeight/3);
-	  theContext.closePath();
-	  theContext.fillStyle="#D36B46";
-	  theContext.fill();
-	}
-
-function drawRuler(rectX,rectY,rectWidth,rectHeight){
-theContext.clearRect(0,rectY-1,500,rectY+rectHeight/2+rectSide+1);
-theContext.beginPath();
-	  theContext.moveTo(rectX,rectY+rectHeight/3);
-	  theContext.lineTo(rectX, rectY+cornerRadius);
-	  theContext.arcTo(rectX , rectY, rectX + cornerRadius, rectY, cornerRadius);
-	  theContext.lineTo(rectX+rectWidth-cornerRadius,rectY);
-	  theContext.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + cornerRadius, cornerRadius);
-	  theContext.lineTo(rectX+rectWidth,rectY+rectHeight/3);
-	  theContext.closePath();
-	  theContext.fillStyle="#5BB3AF"
-	  theContext.fill();
-	  theContext.beginPath();
-	  theContext.moveTo(rectX+rectWidth,rectY+rectHeight/3);
-      theContext.lineTo(rectX + rectWidth, rectY + rectHeight+rectSide-cornerRadius);
-	  theContext.arcTo(rectX + rectWidth, rectY+rectHeight+ rectSide, rectX + rectWidth-cornerRadius, rectY + rectHeight+rectSide, cornerRadius);
-	  theContext.lineTo(rectX + cornerRadius, rectY+rectHeight+rectSide);
-	  theContext.arcTo(rectX, rectY+rectHeight+rectSide, rectX , rectY +rectHeight+rectSide-cornerRadius, cornerRadius);
-	  theContext.lineTo(rectX,rectY+rectHeight/3);
-	  theContext.closePath();
-	 
-	  var grd=theContext.createLinearGradient(rectX,rectY,rectX+rectWidth,rectHeight);
-	  grd.addColorStop(0,"#5BB3AF");
-	grd.addColorStop(1,"#008982");
-	 theContext.fillStyle=grd;
-	 theContext.fill();
-	
-//Draw gridlines
-theContext.beginPath();
-for (j=1; j<12;j++){
-
-theContext.moveTo(45*j-20,130);
-theContext.lineTo(45*j-20,150);
-theContext.font = "13px Arial";
-theContext.fillStyle="white";
-theContext.lineWidth=1.5;
-theContext.fillText(j-6,j*45-25,170);
-}
-theContext.strokeStyle="white";
-
-theContext.stroke();}
-	
-	
-function canvas_arrow(fromx, fromy, tox, toy){
-    var headlen = 10;   // length of head in pixels
-    var angle = Math.atan2(toy-fromy,tox-fromx);
-	if(fromx!= tox||fromy!= toy){
-	theContext.beginPath();
-	theContext.arc(fromx, fromy,2,0,2*Math.PI);
-	theContext.fillStyle="#333";theContext.fill();
-    theContext.moveTo(fromx, fromy);
-    theContext.lineTo(tox, toy);
-	theContext.lineWidth=2;
-	theContext.strokeStyle="#333";theContext.stroke();
-	theContext.moveTo(tox, toy);
-    theContext.lineTo(tox-headlen*Math.cos(angle-Math.PI/9),toy-headlen*Math.sin(angle-Math.PI/9));
-    theContext.lineTo(tox-headlen*Math.cos(angle+Math.PI/9),toy-headlen*Math.sin(angle+Math.PI/9));
-	theContext.closePath();
-	theContext.fillStyle="#333";theContext.fill();}}
-
-function showCoords(e) {
-    pointerX = (e.pageX-theCanvas.offsetLeft)/scale;
- pointerY = (e.pageY-theCanvas.offsetTop)/scale;
-    var coords = "X coords: " + pointerX + ", Y coords: " + pointerY+", <br>Θέση x= "+ Math.round(x)+", rubberX= "+ rubberX+", rubberX0= "+ rubberX0+
-	",<br>scale= "+ scale+".    "+positions;
-    document.getElementById("demo").innerHTML = coords;}
-
-theCanvas.addEventListener('mousedown', mouseDown, false);
-theCanvas.addEventListener('mouseup', mouseUp, false);
-theCanvas.addEventListener('mouseup', write, false);
-document.addEventListener('mouseup',mouseUp, false);   // button release could occur outside canvas
-
-theCanvas.addEventListener('touchstart', touchStart, false);
-    theCanvas.addEventListener('touchmove', touchMove, false);
-	theCanvas.addEventListener('touchend', touchEnd, false);
-theCanvas.addEventListener('mousemove',function(){if (pointerX>=rubberX&&pointerX<=(rubberX+rectWidth)&&pointerY>=50&&pointerY<=(50+rectHeight)){
-theCanvas.style.cursor = 'pointer';	}}, false);
-theCanvas.addEventListener('mousemove',function(){if (pointerX<rubberX||pointerX>(rubberX+rectWidth)||pointerY<50||pointerY>(50+rectHeight)){
-theCanvas.style.cursor = 'default';	}}, false);
-	
-
-</script></body></html>
+</html>
