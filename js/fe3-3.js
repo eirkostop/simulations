@@ -7,7 +7,7 @@ var offsetY = BB.top;
 
 var t = 0;
 var timer1, timer2;
-var p = document.getElementById('plot')
+var p = document.getElementById('plot');
 var pctx = p.getContext("2d");
 var scale = 1;
 var points = [{
@@ -44,9 +44,9 @@ points.push({
 });
 
 var img1 = new Image();
-img1.src = "fe3-2.png";
+img1.src = "../img/fe3-2.png";
 var img2 = new Image();
-img2.src = "fe3-3.png";
+img2.src = "../img/fe3-3.png";
 pctx.drawImage(img2, 0, 0, 496, 340);
 
 
@@ -92,7 +92,6 @@ function resizeCanvas() {
 
 function writeMeasurements() {
     pctx.clearRect(0, 0, 496, 340);
-    pctx.drawImage(img2, 0, 0, 496, 340);
     pctx.setLineDash([]);
     drawGridlines();
     for (i = 0; i < points.length - 1; i++) {
