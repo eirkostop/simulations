@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Θερμόμετρο</title>
+  <link rel="stylesheet" href="css/fe4.css">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+    integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+</head>
+
+<body>
+  <header>
+    <p>Μετατροπές φάσεων</p>
+    <p> © Περί ΦυσιQuiz </p>
+  </header>
+  <main>
+    <div>
+      <p>
+      <i id="play-pause-button" class="fa fa-play myCanvas-button" onclick="playPause();"
+        title="Έναρξη Μέτρησης Χρόνου"></i>
+      <i id="reset-button" class="fa fa-redo myCanvas-button" onclick="reset();" title="Επανέναρξη πειράματος"></i>
+      <label for="timeInput" class="myCanvas-button"> 
+        <input type="checkbox" id="timeInput" onclick="timeCheck()" checked>
+        t
+      </label>
+      <label for="temperatureInput" class="myCanvas-button"> 
+        <input type="checkbox" id="temperatureInput" onclick="temperatureCheck()" checked>
+        θ
+      </label>
+    </p>
+
+    <div>
+      <canvas style="border: 1px solid gray;"></canvas>
+    </div>
+  </main>
+  <script src="js/fe4.js"></script>
+
+</body>
+
+</html>
