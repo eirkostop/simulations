@@ -4,7 +4,8 @@ const initialThermometerLevel = 10,
    initialLiquidLevel = 0,
    initialIceSize = 50,
    initialBubblesOpacity = 0
-let t, timer, temperature = initialTemperature,
+let t = 0,
+   timer, temperature = initialTemperature,
    startTime = 0,
    pauseTime = 0;
 
@@ -280,7 +281,7 @@ class Thermometer {
       this.level = initialThermometerLevel;
       this.dragOk = false; //It can be dragged with mouse
       this.dragging = false; //Currently being dragged
-      this.calibrated = true;
+      this.calibrated = temperatureInput.checked;
       this.cracked = false;
    }
 
@@ -451,8 +452,9 @@ class CanvasDisplay {
          color: '#333'
 
       };
-      this.showTime = true;
-      this.showTemperature = true;
+      this.showTime = timeInput.checked;
+      this.showTemperature = temperatureInput.checked;
+      this.fastForward = fastInput.checked;
 
       this.canvas.width = this.stageConfig.width;
       this.canvas.height = this.stageConfig.height;
@@ -536,6 +538,7 @@ class CanvasDisplay {
       this.HeatSource.heating = false;
       this.Thermometer.level = initialThermometerLevel;
       this.Thermometer.cracked = false;
+      t = 0;
       temperature = initialTemperature;
       this.Vessel.liquidLevel = initialLiquidLevel;
       this.Vessel.iceSize = initialIceSize;
@@ -548,20 +551,20 @@ class CanvasDisplay {
 
    heatThermometer() {
 
-      temperature += 1;
-      this.Thermometer.level = temperature * (this.Thermometer.tube - 30) / 120 + (this.Thermometer.tube + 150) / 12;
+      temperature += this.fastForward ? 0.2 : 0.02;
+      this.Thermometer.level = (temperature) * (this.Thermometer.tube - 30) / 120 + (this.Thermometer.tube + 150) / 12;
 
    }
 
 
    meltIce() {
-      let dx = 0.5;
+      let dx = this.fastForward ? 0.2 : 0.02;
       this.Vessel.iceSize -= dx;
       this.Vessel.liquidLevel += 13 * (Math.pow(this.Vessel.iceSize + dx, 2) - Math.pow(this.Vessel.iceSize, 2)) / this.Vessel.w;
    }
 
    boilWater() {
-      let dx = 0.5
+      let dx = this.fastForward ? 0.2 : 0.02;
       let maxRadius = 15;
       this.Vessel.liquidLevel -= dx;
       this.Vessel.bubbles.forEach(bubble => {
@@ -575,27 +578,30 @@ class CanvasDisplay {
             bubble.o = Math.random();
          }
       });
-
    }
 
 
    animate() {
-      t = (new Date().getTime() / 1000 + (pauseTime - startTime)).toFixed(1);
+
+      // t = (new Date().getTime() / 1000 + (pauseTime - startTime)).toFixed(1);
+      t += this.fastForward ? 0.2 : 0.02;
+      let minutes = Math.round(t / 60);
+      let seconds = Math.round(t % 60);
       this.HeatSource.heating = true;
+      let Celcius = Math.round(temperature);
 
-      this.MeasurementScreens[0].text = 't=' + t + ' s';
-      this.MeasurementScreens[1].text = 'θ=' + temperature + ' ℃';
+      this.MeasurementScreens[0].text = 't=' + (minutes == 0 ? '' : minutes + 'm ') + seconds + 's';
+      this.MeasurementScreens[1].text = 'θ=' + Celcius + '℃';
 
-      if (temperature == 0 && this.Vessel.iceSize > 0) this.meltIce()
-      else if (temperature == 100 && this.Vessel.liquidLevel > 0) this.boilWater();
-      else if (temperature <= 112) this.heatThermometer();
+      if (Celcius == 0 && this.Vessel.iceSize > 0) this.meltIce()
+      else if (Celcius == 100 && this.Vessel.liquidLevel > 0) this.boilWater();
+      else if (Celcius <= 112) this.heatThermometer();
 
+      if (Celcius > 112) this.Thermometer.cracked = true;
       this.draw();
 
-      if (temperature >= 112)
-         this.Thermometer.cracked = true;
-      if (temperature <= 112)
-         timer = window.setTimeout(() => this.animate(), 1000 / 60);
+      if (Celcius <= 112)
+         timer = window.setTimeout(() => this.animate(), 1000 / 50);
 
    }
 
@@ -646,5 +652,10 @@ let temperatureCheck = () => {
 }
 let timeCheck = () => {
    canvasDisplay.showTime = timeInput.checked;
+   canvasDisplay.draw()
+}
+
+let fastCheck = () => {
+   canvasDisplay.fastForward = fastInput.checked;
    canvasDisplay.draw()
 }
